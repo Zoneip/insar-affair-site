@@ -234,7 +234,7 @@
     const bars = (id, obj, label) => {
       const host = $(id);
       if (!host) return;
-      const entries = Object.entries(obj);
+      const entries = Object.entries(obj).sort((a, b) => Number(a[0]) - Number(b[0]));
       const peak = Math.max(...entries.map(([, v]) => v || 0)) || 1;
       host.innerHTML = entries.map(([k, v]) => `
         <div class="repro-bar">
@@ -271,7 +271,9 @@
         <p class="viz-note dim">${data.run} · ${(data.members || []).length > 1
             ? `集成 ${(data.members || []).length} 模型`
             : "单模型"} · 解码 ${data.decode_best} ·
-          阈值 14→${th["14"]} 17→${th["17"]} · 17×17 推理 ${(lat.single_ms || 0).toFixed(2)} ms</p>`;
+          阈值 14→${th["14"]} 17→${th["17"]} · 17×17 推理 ${(lat.single_ms || 0).toFixed(2)} ms</p>`
+        + (data.matrix && data.matrix.note
+          ? `<p class="viz-note dim">矩阵口径：${data.matrix.note}</p>` : "");
     }
   }
 
