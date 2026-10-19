@@ -6,12 +6,12 @@
       "slug": "segmentation",
       "desc": "SVM 历史基线、CNN 当前主线与 daninet 方案占位；置顶维护",
       "md": "segmentation.md",
-      "size": 7611,
-      "sha256": "f38ef909806c",
+      "size": 9340,
+      "sha256": "5f76d45b566b",
       "updated": "2026-10-19",
       "read": "../read/segmentation.html",
       "docx": "segmentation.docx",
-      "docx_size": 17253
+      "docx_size": 18088
     },
     {
       "title": "复现说明",
@@ -47,7 +47,7 @@
       "updated": "2026-10-19",
       "read": "../read/gaps.html",
       "docx": "gaps.docx",
-      "docx_size": 13576
+      "docx_size": 13575
     }
   ]
 }

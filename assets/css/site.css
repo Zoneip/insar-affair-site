@@ -578,3 +578,33 @@ article.prose{background:none;border:0;padding:0;box-shadow:none;margin:0}
 @media (max-width: 820px) {
   .gp-block { border-right: 0; border-bottom: 1px solid var(--line); }
 }
+
+/* ---------- block-edge branch on the segmentation page ---------- */
+.viz-branch {
+  margin-top: 3.2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line-strong);
+}
+.viz-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin: 0.8rem 0 2.2rem;
+}
+.viz-figures img {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+}
+.viz-edge-bars { display: grid; gap: 5px; margin: 0.7rem 0 1.6rem; }
+.viz-edge-split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.4rem;
+  margin-bottom: 1.2rem;
+}
+.viz-edge-bars .repro-bar .viz-bar { height: 8px; }
+.viz-edge-bars .repro-bar .viz-bar i { background: var(--c1); }
+.viz-edge-bars .repro-bar:nth-child(odd) .viz-bar i { background: var(--c2); }

@@ -212,6 +212,67 @@
       <p class="viz-note dim">判错集中在低置信区说明模型“知道自己不确定”；若集中在高置信区，则说明校准有问题，需要重新训练而非调阈值。</p>`;
   }
 
+  async function drawEdge() {
+    const figs = $("viz-edge-figs");
+    if (!figs) return;
+    let data;
+    try {
+      const res = await fetch("edge.json", { cache: "no-store" });
+      if (!res.ok) return;
+      data = await res.json();
+    } catch (err) {
+      return;
+    }
+
+    const fig = (src, label, note) =>
+      `<figure class="viz-figure"><img src="${src}" alt="${label}" loading="lazy">` +
+      `<figcaption>${label}<small>${note}</small></figcaption></figure>`;
+    figs.innerHTML =
+      fig("../../assets/img/edge/gallery.png", "样本画廊", "不同视数 / 边界数的真值与预测对照") +
+      fig("../../assets/img/edge/dataset_overview.png", "数据集概览", "尺寸、边界数、块宽分布");
+
+    const bars = (id, obj, label) => {
+      const host = $(id);
+      if (!host) return;
+      const entries = Object.entries(obj);
+      const peak = Math.max(...entries.map(([, v]) => v || 0)) || 1;
+      host.innerHTML = entries.map(([k, v]) => `
+        <div class="repro-bar">
+          <span class="repro-bar-label">${label}${k}</span>
+          <span class="viz-bar"><i style="width:${((v || 0) / peak) * 100}%"></i></span>
+          <span class="repro-bar-value">${((v || 0) * 100).toFixed(1)}%</span>
+        </div>`).join("");
+    };
+    bars("edge-looks", data.by_looks, "L=");
+    bars("edge-width", data.by_min_width, "块宽 ");
+    bars("edge-count", data.by_truth_count, "边界数 ");
+
+    const rows = Object.entries(data.by_looks_full || {}).map(([L, m]) => `
+      <tr><td>L=${L}</td>
+      <td class="num">${(m.exact_accuracy * 100).toFixed(1)}</td>
+      <td class="num">${(m.boundary_f1 * 100).toFixed(1)}</td>
+      <td class="num">${((m.rect_precision || 0) * 100).toFixed(1)}</td>
+      <td class="num">${m.mean_absolute_count_error.toFixed(2)}</td></tr>`).join("");
+    const u = data.unseen_size || {};
+    const lat = (data.latency_ms && data.latency_ms["17"]) || {};
+    const th = data.thresholds || {};
+    const table = $("edge-table");
+    if (table) {
+      table.innerHTML = `
+        <table class="viz-cm">
+          <thead><tr><th>切分</th><th>Exact</th><th>Boundary F1</th><th>Rect P</th><th>MAE</th></tr></thead>
+          <tbody>${rows}
+          <tr><th>未见尺寸 25</th>
+            <td class="num">${((u.exact || 0) * 100).toFixed(1)}</td>
+            <td class="num">${((u.boundary_f1 || 0) * 100).toFixed(1)}</td>
+            <td class="num">${((u.rect_precision || 0) * 100).toFixed(1)}</td>
+            <td class="num">${(u.mean_absolute_count_error || 0).toFixed(2)}</td></tr>
+          </tbody></table>
+        <p class="viz-note dim">${data.run} · 集成 ${(data.members || []).length} 模型 · 解码 ${data.decode_best} ·
+          阈值 14→${th["14"]} 17→${th["17"]} · 17×17 集成 ${(lat.ensemble3_ms || 0).toFixed(2)} ms</p>`;
+    }
+  }
+
   async function boot() {
     const host = $("viz-levels");
     if (!host) return;
@@ -231,6 +292,7 @@
     drawConfusion($("viz-confusion"), data);
     drawRecallGrid($("viz-recall-grid"), data);
     drawConfidence($("viz-conf"), data);
+    drawEdge();
   }
 
   if (document.readyState === "loading") {
