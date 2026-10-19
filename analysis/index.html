@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="../assets/css/base.css">
 <link rel="stylesheet" href="../assets/css/components.css">
 <link rel="stylesheet" href="../assets/css/doc.css">
+<link rel="stylesheet" href="../assets/css/paper.css">
 </head>
 <body>
 <a class="skip-link" href="#main">跳到主要内容</a>
@@ -29,8 +30,7 @@
   </div>
   <div class="meta">source · docs/content/analysis.md</div>
 </div>
-<article class="prose"><h1 id="数据分析">数据分析</h1>
-<p>本页汇总 2026-10-19 在单卡 Ascend910_9382 上的复现结果。所有数值取自 <code>daninet/runs/&lt;run&gt;/metrics.json</code>，可用页面底部命令复算。</p>
+<article class="prose"><p>本页汇总 2026-10-19 在单卡 Ascend910_9382 上的复现结果。所有数值取自 <code>daninet/runs/&lt;run&gt;/metrics.json</code>，可用页面底部命令复算。</p>
 <h2 id="实验设置">实验设置</h2>
 <div class="table-wrap"><table><thead><tr><th>项</th><th>值</th></tr></thead><tbody><tr><td class="">输入</td><td class="">4 个幅度 + 6 个相干，<code>10 × 128 × 128</code></td></tr><tr><td class="">网络</td><td class="">全卷积、无池化；5 blocks = 759,124 参数；10 blocks = 1,498,324</td></tr><tr><td class="">训练视数</td><td class="">9 / 16 / 36 / 121（augmented 模式混合采样）</td></tr><tr><td class="">测试视数</td><td class="">9 / 16 / 25 / 36 / 49 / 121，其中 <strong>25、49 未参与训练</strong></td></tr><tr><td class="">损失</td><td class="">Categorical Cross-Entropy（Eq. 34），Adam，学习率按 Eq. 35 三段下降</td></tr><tr><td class="">数据</td><td class="">在线合成，不落盘；每 batch 固定 seed，保证可复现</td></tr></tbody></table></div>
 <h2 id="结果对比">结果对比</h2>

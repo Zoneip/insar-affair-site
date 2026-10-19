@@ -68,20 +68,20 @@
   <section class="grid">
     <figure class="panel span2">
       <figcaption>损失曲线<span class="hint">train / val · 逐 epoch</span></figcaption>
-      <div id="chartLoss" class="chart"></div>
+      <div class="canvas-wrap tall"><canvas id="chartLoss" role="img" aria-label="损失曲线"></canvas></div>
     </figure>
     <figure class="panel">
       <figcaption>验证 F1<span class="hint">weighted</span></figcaption>
-      <div id="chartF1" class="chart"></div>
+      <div class="canvas-wrap"><canvas id="chartF1" role="img" aria-label="验证集加权 F1"></canvas></div>
     </figure>
 
     <figure class="panel">
       <figcaption>学习率<span class="hint">Eq. 35 · 对数轴</span></figcaption>
-      <div id="chartLR" class="chart"></div>
+      <div class="canvas-wrap"><canvas id="chartLR" role="img" aria-label="学习率日程"></canvas></div>
     </figure>
     <figure class="panel span2">
       <figcaption>测试视数 vs F1<span class="hint">L=25 / 49 训练时未见</span></figcaption>
-      <div id="chartTest" class="chart"></div>
+      <div class="canvas-wrap"><canvas id="chartTest" role="img" aria-label="测试视数与 F1"></canvas></div>
     </figure>
 
     <figure class="panel span2">
@@ -104,7 +104,9 @@
   </footer>
 </main>
 
-<script src="../assets/js/charts.js"></script>
-<script src="../assets/js/live.js"></script>
+<script src="../assets/vendor/chartjs/chart.umd.js" defer></script>
+<script src="../assets/vendor/animejs/anime.min.js" defer></script>
+<script src="../assets/js/live-charts.js" defer></script>
+<script src="../assets/js/live.js" defer></script>
 </body>
 </html>

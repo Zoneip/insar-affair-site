@@ -28,7 +28,7 @@
 
 .runbar { display: flex; gap: 1px; flex-wrap: wrap; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; margin-bottom: var(--s5); }
 .chip {
-  flex: 1 1 190px;
+  flex: 1 1 220px;
   appearance: none;
   cursor: pointer;
   padding: var(--s3) var(--s4);
@@ -83,7 +83,9 @@
 }
 .progress span { font-family: var(--font-mono); font-size: 10.5px; color: var(--faint); letter-spacing: 0.06em; }
 
-.chart svg { display: block; width: 100%; height: auto; }
+.canvas-wrap { position: relative; height: 240px; }
+.canvas-wrap.tall { height: 300px; }
+.canvas-wrap canvas { display: block; width: 100% !important; height: 100% !important; }
 
 .log {
   margin: 0;

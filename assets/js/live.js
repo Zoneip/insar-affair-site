@@ -7,7 +7,7 @@
   const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const fmt = (v, d = 4) => (v === null || v === undefined || Number.isNaN(v) ? "—" : Number(v).toFixed(d));
-  const esc = Charts.esc;
+  const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   function fail(message) {
     const box = $("error");
@@ -44,44 +44,7 @@
   }
 
   function renderCharts(run, upto) {
-    const h = visible(run, upto);
-    const labels = h.map((x) => String(x.epoch));
-
-    Charts.render($("chartLoss"), {
-      uid: "loss",
-      title: "损失曲线",
-      labels,
-      series: [
-        { label: "train", color: "var(--c1)", values: h.map((x) => x.train_loss) },
-        { label: "val", color: "var(--c2)", values: h.map((x) => x.val_loss) },
-      ],
-    });
-
-    Charts.render($("chartF1"), {
-      uid: "f1",
-      title: "验证集 weighted F1",
-      labels,
-      decimals: 3,
-      series: [{ label: "val F1", color: "var(--c3)", values: h.map((x) => x.val_f1) }],
-    });
-
-    Charts.render($("chartLR"), {
-      uid: "lr",
-      title: "学习率日程",
-      labels,
-      log: true,
-      area: false,
-      series: [{ label: "lr", color: "var(--c4)", values: h.map((x) => x.lr), step: true }],
-    });
-
-    const Ls = Object.keys(run.tests || {});
-    Charts.render($("chartTest"), {
-      uid: "test",
-      title: "测试视数 vs 加权 F1",
-      labels: Ls.map((L) => `L=${L}`),
-      decimals: 3,
-      series: [{ label: "weighted F1", color: "var(--c1)", values: Ls.map((L) => run.tests[L].f1_weighted) }],
-    });
+    if (window.LiveCharts) LiveCharts.render(run, upto);
   }
 
   function renderLog(run, upto) {
@@ -179,6 +142,7 @@
       S.upto = S.run.history.length;
       renderRunbar();
       render();
+      intro();
       if (S.data.live) {
         setStatus("直播中", "live");
       } else {
@@ -194,6 +158,12 @@
         render();
       }
     }
+  }
+
+  function intro() {
+    if (!window.anime || REDUCED) return;
+    anime({ targets: ".stat", translateY: [8, 0], duration: 420, delay: anime.stagger(50), easing: "easeOutQuad" });
+    anime({ targets: ".panel", translateY: [12, 0], duration: 520, delay: anime.stagger(70, { start: 120 }), easing: "easeOutQuad" });
   }
 
   function boot() {

@@ -1,0 +1,64 @@
+/* F · 期刊抽印本：白纸、衬线正文、细线表格、窄栏。仅用于阅读型页面。 */
+[data-theme="light"] body {
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 96px,
+    var(--bg);
+  font-family: Georgia, "Songti SC", "Noto Serif SC", "Source Han Serif SC", serif;
+  font-size: 17px;
+  line-height: 1.86;
+}
+
+[data-theme="light"] .page-head { padding-top: var(--s8); padding-bottom: var(--s6); }
+[data-theme="light"] .page-head h1 {
+  font-family: Georgia, "Songti SC", "Noto Serif SC", serif;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+[data-theme="light"] .page-head .sub { font-family: var(--font-sans); font-size: var(--text-sm); }
+
+[data-theme="light"] .prose { max-width: 76ch; }
+[data-theme="light"] .prose h2 {
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 21px;
+  margin-top: var(--s7);
+  padding-bottom: var(--s2);
+  border-bottom: 1px solid var(--line);
+}
+[data-theme="light"] .prose h3 {
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 17px;
+  margin-top: var(--s7);
+}
+[data-theme="light"] .prose p { color: #1a1a1a; }
+[data-theme="light"] .prose li { color: #1a1a1a; }
+[data-theme="light"] .prose strong { font-weight: 700; }
+
+[data-theme="light"] .table-wrap { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+[data-theme="light"] .table-wrap th {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: #333;
+  border-bottom: 1px solid var(--ink);
+}
+[data-theme="light"] .table-wrap td {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  border-bottom: 1px solid #ececec;
+  color: #222;
+}
+[data-theme="light"] .table-wrap td.num { font-family: var(--font-mono); }
+
+[data-theme="light"] .prose code { background: #f1f1f1; border-color: #e2e2e2; color: #111; }
+[data-theme="light"] .prose pre.code { background: #f7f7f7; border: 1px solid #e2e2e2; color: #1a1a1a; }
+[data-theme="light"] blockquote { border-left: 2px solid #111; background: #f6f6f6; color: #333; }
+
+[data-theme="light"] .doc-row { border-bottom: 1px solid #e6e6e6; }
+[data-theme="light"] .doc-row .name { font-family: var(--font-sans); font-size: 14.5px; }
+[data-theme="light"] .doc-row .size { color: #666; }
+
+[data-theme="light"] .nav { background: rgba(250, 250, 250, 0.9); }
+[data-theme="light"] .nav .links a { letter-spacing: 0.08em; }
+
+[data-theme="light"] .btn { border-color: #111; color: #111; }
+[data-theme="light"] .btn:hover { background: #111; color: #fff; }
+[data-theme="light"] .btn.ghost { border-color: #c9c9c9; color: #333; }
