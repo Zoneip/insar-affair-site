@@ -5,34 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>缺陷分析 · InSAR_affair</title>
 <meta name="description" content="缺陷清单、所需资源、疑难点">
-<meta name="theme-color" content="#060606">
+<meta name="theme-color" content="#fafafa">
 <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../../assets/css/tokens.css">
-<link rel="stylesheet" href="../../assets/css/base.css">
-<link rel="stylesheet" href="../../assets/css/components.css">
-<link rel="stylesheet" href="../../assets/css/doc.css">
-<link rel="stylesheet" href="../../assets/css/paper.css">
+<link rel="stylesheet" href="../../assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
 </head>
 <body>
 <a class="skip-link" href="#main">跳到主要内容</a>
-<header class="nav">
-  <a class="brand" href="../../index.html">INSAR<i>/</i>AFFAIR</a>
-  <nav class="links" aria-label="主导航"><a href="../../index.html">总览</a><a href="../../live/index.html">训练看板</a><a href="../../analysis/index.html">数据分析</a><a href="../../gaps/index.html">缺陷分析</a><a href="../../documents/index.html" class="active">文档</a></nav>
-  <span class="right">2026-10-19</span>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="../../index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="../../index.html">总览</a></li><li><a href="../../live/index.html">训练看板</a></li><li><a href="../../analysis/index.html">数据分析</a></li><li><a href="../../gaps/index.html">缺陷分析</a></li><li><a href="../../documents/index.html" aria-current="page">文档</a></li></ul>
+  </nav>
 </header>
-<main class="shell" id="main">
-
-<div class="page-head">
-  <div>
-    <span class="eyebrow">Document · gaps</span>
-    <h1>缺陷分析</h1>
-    <p class="sub">缺陷清单、所需资源、疑难点</p>
-  </div>
-  <div class="meta">updated 2026-10-19</div>
-</div>
+<main class="container" id="main">
+<header class="page-head">
+  <p class="eyebrow">document · gaps</p>
+  <h1>缺陷分析</h1>
+  <p class="sub">缺陷清单、所需资源、疑难点</p>
+  <p class="meta">updated 2026-10-19</p>
+</header>
 <div class="reader-actions">
-  <a class="btn ghost" href="../index.html">← 返回文档列表</a>
-  <a class="btn" href="../files/gaps.docx" download>下载 docx</a>
+  <a role="button" class="secondary outline" href="../index.html">← 返回文档列表</a>
+  <a role="button" class="outline" href="../files/gaps.docx" download>下载 Word</a>
 </div>
 <article class="prose"><p>按「已证实的问题 → 需要的资源 → 还没想清的地方」三层组织，每条都给出证据。</p>
 <h2 id="一-缺陷清单">一、缺陷清单</h2>
@@ -50,6 +45,8 @@
 <ul><li>已实现：设备抽象、AMP、fp16 管道、直播看板、报告站点</li><li>已验证：NPU 与 GPU 同解；AMP 与 fp32 同解；10 blocks 提升</li><li>未实现：真实数据两例、PCD 对比</li><li>未验证：长训练的收敛性、fp16 的逐步轨迹一致性</li></ul></article>
 
 </main>
-<footer>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · 站点无第三方依赖</footer>
+<footer class="container">
+  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css + Chart.js（本地托管）</small>
+</footer>
 </body>
 </html>

@@ -4,57 +4,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DANI-NET 复现 · InSAR_affair</title>
-<meta name="description" content="DANI-NET 复现的训练看板、数据分析、缺陷分析与文档下载。">
-<meta name="theme-color" content="#060606">
+<meta name="description" content="DANI-NET 复现的训练看板、数据分析、缺陷分析与文档。">
+<meta name="theme-color" content="#fafafa">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/tokens.css">
-<link rel="stylesheet" href="assets/css/base.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/doc.css">
-
+<link rel="stylesheet" href="assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
 <a class="skip-link" href="#main">跳到主要内容</a>
-<header class="nav">
-  <a class="brand" href="index.html">INSAR<i>/</i>AFFAIR</a>
-  <nav class="links" aria-label="主导航"><a href="index.html" class="active">总览</a><a href="live/index.html">训练看板</a><a href="analysis/index.html">数据分析</a><a href="gaps/index.html">缺陷分析</a><a href="documents/index.html">文档</a></nav>
-  <span class="right">2026-10-19</span>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="index.html" aria-current="page">总览</a></li><li><a href="live/index.html">训练看板</a></li><li><a href="analysis/index.html">数据分析</a></li><li><a href="gaps/index.html">缺陷分析</a></li><li><a href="documents/index.html">文档</a></li></ul>
+  </nav>
 </header>
-<main class="shell" id="main">
-
-<div class="page-head">
-  <div>
-    <span class="eyebrow">Reproduction · 2026</span>
-    <h1>DANI-NET 复现</h1>
-    <p class="sub">重复轨道 InSAR 变化检测的合成链路复现：物理模型、在线数据生成、全卷积网络与训练评估。</p>
-  </div>
-  <div class="meta">Ascend 910<br>单卡 · CANN 9.0</div>
-</div>
-<div class="stats"><div class="stat"><span class="k">weights</span><span class="v">1,498,324</span></div><div class="stat"><span class="k">epochs</span><span class="v">15</span></div><div class="stat"><span class="k">weighted F1 · L=121</span><span class="v">0.792</span></div><div class="stat"><span class="k">train time</span><span class="v">7.9<small> min</small></span></div></div>
-<div class="grid-cells cards-4">
-  <a class="card-link" href="live/index.html">
-    <span class="idx">01</span><h3>训练看板</h3>
+<main class="container" id="main">
+<header class="page-head">
+  <p class="eyebrow">Reproduction · 2026</p>
+  <h1>DANI-NET 复现</h1>
+  <p class="sub">重复轨道 InSAR 变化检测的合成链路复现：物理模型、在线数据生成、全卷积网络与训练评估。</p>
+  <p class="meta">Ascend 910 · 单卡 · CANN 9.0</p>
+</header><div class="stats"><article><span class="k">weights</span><span class="v">1,498,324</span></article><article><span class="k">epochs</span><span class="v">15</span></article><article><span class="k">weighted F1 · L=121</span><span class="v">0.792</span></article><article><span class="k">train time</span><span class="v">7.9<small> min</small></span></article></div>
+<div class="entries">
+  <a href="live/index.html">
+    <span class="idx">01</span><h2>训练看板</h2>
     <p>逐 epoch 损失、验证 F1、学习率日程与测试视数对比，支持回放。</p>
     <span class="arrow">打开 →</span>
   </a>
-  <a class="card-link" href="analysis/index.html">
-    <span class="idx">02</span><h3>数据分析</h3>
+  <a href="analysis/index.html">
+    <span class="idx">02</span><h2>数据分析</h2>
     <p>实验设置、四组对照结果与三条结论，含逐类检测概率。</p>
     <span class="arrow">查看 →</span>
   </a>
-  <a class="card-link" href="gaps/index.html">
-    <span class="idx">03</span><h3>缺陷分析</h3>
+  <a href="gaps/index.html">
+    <span class="idx">03</span><h2>缺陷分析</h2>
     <p>已证实缺陷、改进所需资源与设备、尚未想清的疑难点。</p>
     <span class="arrow">查看 →</span>
   </a>
-  <a class="card-link" href="documents/index.html">
-    <span class="idx">04</span><h3>文档</h3>
-    <p>复现说明、分析报告与代码包，可直接下载。</p>
+  <a href="documents/index.html">
+    <span class="idx">04</span><h2>文档</h2>
+    <p>复现说明、分析报告与代码包，可页内阅读或下载 Word。</p>
     <span class="arrow">打开 →</span>
   </a>
 </div>
 
 </main>
-<footer>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · 站点无第三方依赖</footer>
+<footer class="container">
+  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css + Chart.js（本地托管）</small>
+</footer>
 </body>
 </html>

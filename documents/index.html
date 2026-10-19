@@ -5,36 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>文档 · InSAR_affair</title>
 <meta name="description" content="复现说明、分析报告与代码包。">
-<meta name="theme-color" content="#060606">
+<meta name="theme-color" content="#fafafa">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/tokens.css">
-<link rel="stylesheet" href="../assets/css/base.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/doc.css">
-<link rel="stylesheet" href="../assets/css/paper.css">
+<link rel="stylesheet" href="../assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="../assets/css/site.css">
 </head>
 <body>
 <a class="skip-link" href="#main">跳到主要内容</a>
-<header class="nav">
-  <a class="brand" href="../index.html">INSAR<i>/</i>AFFAIR</a>
-  <nav class="links" aria-label="主导航"><a href="../index.html">总览</a><a href="../live/index.html">训练看板</a><a href="../analysis/index.html">数据分析</a><a href="../gaps/index.html">缺陷分析</a><a href="../documents/index.html" class="active">文档</a></nav>
-  <span class="right">2026-10-19</span>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="../index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="../index.html">总览</a></li><li><a href="../live/index.html">训练看板</a></li><li><a href="../analysis/index.html">数据分析</a></li><li><a href="../gaps/index.html">缺陷分析</a></li><li><a href="../documents/index.html" aria-current="page">文档</a></li></ul>
+  </nav>
 </header>
-<main class="shell" id="main">
-
-<div class="page-head">
-  <div>
-    <span class="eyebrow">Library</span>
-    <h1>文档</h1>
-    <p class="sub">基础文档可在页内阅读，也可下载为 Word 文档；代码包直接下载。</p>
-  </div>
-  <div class="meta">4 documents</div>
-</div>
-<ul class="doc-list"><li class="doc-row"><div class="name"><a href="read/reproduction.html">复现说明</a><em>DANI-NET 复现的完整说明：公式对照、复现发现、结果表</em></div><div class="size">20.7 KB</div><div class="acts"><a class="btn ghost" href="read/reproduction.html">阅读</a><a class="btn" href="files/reproduction.docx" download>下载 docx</a></div></li><li class="doc-row"><div class="name"><a href="read/analysis.html">数据分析</a><em>实验设置、对照结果与三条结论</em></div><div class="size">11.9 KB</div><div class="acts"><a class="btn ghost" href="read/analysis.html">阅读</a><a class="btn" href="files/analysis.docx" download>下载 docx</a></div></li><li class="doc-row"><div class="name"><a href="read/gaps.html">缺陷分析</a><em>缺陷清单、所需资源、疑难点</em></div><div class="size">12.0 KB</div><div class="acts"><a class="btn ghost" href="read/gaps.html">阅读</a><a class="btn" href="files/gaps.docx" download>下载 docx</a></div></li><li class="doc-row"><div class="name">复现代码包<em>源码 + 说明，不含权重与数据</em></div><div class="size">49.0 KB</div><div class="acts"><a class="btn" href="files/insar-affair-code-2026-10-19.zip" download>下载</a></div></li></ul>
-<p class="note">文档随每次发布重新导出（markdown → docx 由 pandoc 完成）；若列表为空，先在仓库根执行
-<code>python3 daninet/tools/export_docs.py</code>。</p>
+<main class="container" id="main">
+<header class="page-head">
+  <p class="eyebrow">Library</p>
+  <h1>文档</h1>
+  <p class="sub">基础文档可在页内阅读，也可下载为 Word 文档；代码包直接下载。</p>
+  <p class="meta">4 documents</p>
+</header><table class="doc-table"><thead><tr><th>文档</th><th>大小</th><th></th></tr></thead><tbody><tr><td class="title"><a href="read/reproduction.html">复现说明</a><small>DANI-NET 复现的完整说明：公式对照、复现发现、结果表</small></td><td class="size">20.7 KB</td><td class="actions"><a role="button" class="secondary outline" href="read/reproduction.html">阅读</a><a role="button" class="outline" href="files/reproduction.docx" download>下载 Word</a></td></tr><tr><td class="title"><a href="read/analysis.html">数据分析</a><small>实验设置、对照结果与三条结论</small></td><td class="size">11.9 KB</td><td class="actions"><a role="button" class="secondary outline" href="read/analysis.html">阅读</a><a role="button" class="outline" href="files/analysis.docx" download>下载 Word</a></td></tr><tr><td class="title"><a href="read/gaps.html">缺陷分析</a><small>缺陷清单、所需资源、疑难点</small></td><td class="size">12.0 KB</td><td class="actions"><a role="button" class="secondary outline" href="read/gaps.html">阅读</a><a role="button" class="outline" href="files/gaps.docx" download>下载 Word</a></td></tr><tr><td class="title">复现代码包<small>源码 + 说明，不含权重与数据</small></td><td class="size">49.0 KB</td><td class="actions"><a role="button" class="outline" href="files/insar-affair-code-2026-10-19.zip" download>下载</a></td></tr></tbody></table>
+<p><small>文档随每次发布重新导出（markdown → docx 由 pandoc 完成）；若列表为空，先在仓库根执行
+<code>python3 daninet/tools/export_docs.py</code>。</small></p>
 
 </main>
-<footer>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · 站点无第三方依赖</footer>
+<footer class="container">
+  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css + Chart.js（本地托管）</small>
+</footer>
 </body>
 </html>

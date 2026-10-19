@@ -17,7 +17,7 @@
   }
 
   function setStatus(text, cls) {
-    $("statusPill").className = `pill ${cls || ""}`;
+    $("statusPill").className = `status-pill ${cls || ""}`;
     $("statusText").textContent = text;
   }
 
@@ -39,7 +39,7 @@
       ["可训练参数", run.params ? run.params.toLocaleString() : "—"],
     ];
     $("kpis").innerHTML = items
-      .map(([k, v]) => `<div class="stat"><span class="k">${k}</span><span class="v">${v}</span></div>`)
+      .map(([k, v]) => `<article><span class="k">${k}</span><span class="v">${v}</span></article>`)
       .join("");
   }
 
@@ -67,7 +67,7 @@
     renderKpis(run, S.upto);
     renderCharts(run, S.upto);
     renderLog(run, S.upto);
-    $("progressBar").style.width = `${(S.upto / max) * 100}%`;
+    $("progress").value = Math.round((S.upto / max) * 100);
     $("progressText").textContent = `${S.upto} / ${run.epochs} epoch`;
     $("note").innerHTML =
       `<strong style="color:var(--ink-soft)">${esc(run.label)}</strong> · ` +
@@ -105,7 +105,8 @@
   }
 
   function clock() {
-    $("clock").textContent = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+    const el = $("clock");
+    if (el) el.textContent = new Date().toLocaleTimeString("zh-CN", { hour12: false });
   }
 
   function renderRunbar() {
@@ -114,14 +115,13 @@
       .map((r) => {
         const lastL = r.test_L?.[r.test_L.length - 1];
         const best = r.tests?.[String(lastL)]?.f1_weighted;
-        return `<button class="chip${r.id === S.run.id ? " active" : ""}" data-id="${esc(r.id)}"
-                  aria-pressed="${r.id === S.run.id}">
+        return `<button data-id="${esc(r.id)}" class="${r.id === S.run.id ? "active" : ""}" aria-pressed="${r.id === S.run.id}">
           <strong>${esc(r.label)}</strong>
           <span>${r.epochs} ep · ${(r.seconds / 60).toFixed(1)} min · F1 ${fmt(best, 3)}</span>
         </button>`;
       })
       .join("");
-    bar.querySelectorAll(".chip").forEach((el) => {
+    bar.querySelectorAll("button").forEach((el) => {
       el.addEventListener("click", () => {
         stop();
         S.run = S.data.runs.find((r) => r.id === el.dataset.id);
@@ -162,8 +162,8 @@
 
   function intro() {
     if (!window.anime || REDUCED) return;
-    anime({ targets: ".stat", translateY: [8, 0], duration: 420, delay: anime.stagger(50), easing: "easeOutQuad" });
-    anime({ targets: ".panel", translateY: [12, 0], duration: 520, delay: anime.stagger(70, { start: 120 }), easing: "easeOutQuad" });
+    anime({ targets: ".stats article", translateY: [8, 0], duration: 420, delay: anime.stagger(50), easing: "easeOutQuad" });
+    anime({ targets: ".panels article", translateY: [12, 0], duration: 520, delay: anime.stagger(70, { start: 120 }), easing: "easeOutQuad" });
   }
 
   function boot() {
