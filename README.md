@@ -6,6 +6,7 @@
 
 | 文档 | 内容 |
 | --- | --- |
+| `README.md`（仓库根） | **项目 README**：定位、产品线、环境与目录速查（置顶） |
 | `docs/content/segmentation.md` | **InSAR 矩阵分割**：SVM 历史基线、CNN 当前主线、daninet 方案占位（置顶，长期维护） |
 | `docs/content/analysis.md` | 数据分析：四组对照实验设置与结论 |
 | `docs/content/gaps.md` | 缺陷清单、改进所需资源、疑难点 |

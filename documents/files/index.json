@@ -2,6 +2,18 @@
   "generated_at": "2026-10-19",
   "files": [
     {
+      "title": "项目 README",
+      "slug": "readme",
+      "desc": "项目定位、两条产品线、环境与目录速查",
+      "md": "readme.md",
+      "size": 8906,
+      "sha256": "c62504c6a79c",
+      "updated": "2026-10-19",
+      "read": "../read/readme.html",
+      "docx": "readme.docx",
+      "docx_size": 17848
+    },
+    {
       "title": "InSAR 矩阵分割",
       "slug": "segmentation",
       "desc": "SVM 历史基线、CNN 当前主线与 daninet 方案占位；置顶维护",
@@ -11,7 +23,7 @@
       "updated": "2026-10-19",
       "read": "../read/segmentation.html",
       "docx": "segmentation.docx",
-      "docx_size": 18256
+      "docx_size": 18257
     },
     {
       "title": "复现说明",
@@ -47,7 +59,7 @@
       "updated": "2026-10-19",
       "read": "../read/gaps.html",
       "docx": "gaps.docx",
-      "docx_size": 13574
+      "docx_size": 13575
     }
   ]
 }
