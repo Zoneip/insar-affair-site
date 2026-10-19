@@ -11,19 +11,19 @@
       "updated": "2026-10-19",
       "read": "../read/reproduction.html",
       "docx": "reproduction.docx",
-      "docx_size": 21219
+      "docx_size": 22671
     },
     {
       "title": "数据分析",
       "slug": "analysis",
       "desc": "实验设置、对照结果与三条结论",
       "md": "analysis.md",
-      "size": 2632,
-      "sha256": "9ebf1c9bcca3",
+      "size": 2987,
+      "sha256": "616edf239e46",
       "updated": "2026-10-19",
       "read": "../read/analysis.html",
       "docx": "analysis.docx",
-      "docx_size": 12162
+      "docx_size": 13592
     },
     {
       "title": "缺陷分析",
@@ -35,18 +35,7 @@
       "updated": "2026-10-19",
       "read": "../read/gaps.html",
       "docx": "gaps.docx",
-      "docx_size": 12328
-    },
-    {
-      "title": "复现代码包",
-      "slug": "code",
-      "desc": "源码 + 说明，不含权重与数据",
-      "md": null,
-      "docx": null,
-      "zip": "insar-affair-code-2026-10-19.zip",
-      "size": 50169,
-      "sha256": "6016e4b010e7",
-      "updated": "2026-10-19"
+      "docx_size": 13576
     }
   ]
 }

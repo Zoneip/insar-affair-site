@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>可视化 · InSAR_affair</title>
+<meta name="description" content="InSAR 矩阵分割与论文复现两条可视化线。">
+<meta name="theme-color" content="#faf8f3">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="../index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="../index.html">总览</a></li><li><a href="../live/index.html">训练看板</a></li><li><a href="../analysis/index.html">数据分析</a></li><li><a href="../visual/index.html" aria-current="page">可视化</a></li><li><a href="../gaps/index.html">缺陷分析</a></li><li><a href="../documents/index.html">文档</a></li></ul>
+  </nav>
+</header>
+<main class="container" id="main">
+<header class="page-head">
+  <p class="eyebrow">Visual · Two tracks</p>
+  <h1>可视化</h1>
+  <p class="sub">两条线并行推进：一条看模型怎么切分相干矩阵，一条看复现离论文还差多远。</p>
+  <p class="meta">segmentation / reproduction</p>
+</header>
+<div class="viz-hub">
+  <a class="viz-hub-card" href="segmentation/index.html">
+    <span class="viz-tag">TRACK 01</span>
+    <h2>InSAR 矩阵分割</h2>
+    <p>逐像素分割热力图、不同视数下的泛化、混淆矩阵、置信度分布。数据由训练好的权重现场抽样生成。</p>
+    <span class="viz-hub-note">a3_b10_e25 · 最佳 L=121 · ACC 80.1%</span>
+    <span class="arrow">进入 →</span>
+  </a>
+  <a class="viz-hub-card" href="reproduction/index.html">
+    <span class="viz-tag">TRACK 02</span>
+    <h2>论文复现</h2>
+    <p>多组实验的 F1–视数曲线、训练过程、吞吐对照，以及逐节复现状态：哪些做到了、哪些还没。</p>
+    <span class="viz-hub-note">6 组实验 · 最高 F1 0.794</span>
+    <span class="arrow">进入 →</span>
+  </a>
+</div>
+
+</main>
+<footer class="container">
+  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css（本地托管）</small>
+</footer>
+
+</body>
+</html>

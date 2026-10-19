@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>矩阵分割 · InSAR_affair</title>
+<meta name="description" content="相干矩阵分割的逐像素热力图、尺寸泛化与误差分析。">
+<meta name="theme-color" content="#faf8f3">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="../../index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="../../index.html">总览</a></li><li><a href="../../live/index.html">训练看板</a></li><li><a href="../../analysis/index.html">数据分析</a></li><li><a href="../../visual/index.html" aria-current="page">可视化</a></li><li><a href="../../gaps/index.html">缺陷分析</a></li><li><a href="../../documents/index.html">文档</a></li></ul>
+  </nav>
+</header>
+<main class="container" id="main">
+<header class="page-head">
+  <p class="eyebrow">Track 01 · Segmentation</p>
+  <h1>InSAR 矩阵分割</h1>
+  <p class="sub">同一批合成场景上的逐像素预测：热力图按四类着色，误差图只标错分像素，看的是模型在哪一类上失手。</p>
+  <p class="meta">a3_b10_e25 · epoch 25 · 6 个视数 · 64×64 热力图</p>
+</header><p class="lede">四类地物用四种颜色表示：青绿 = 稳定、橙 = 突变、石板蓝 = 线性、灰 = 周期。每张图都是 128×128 场景下采样到 64×64 的逐像素预测；红点表示判断错误的像素。</p><div class="viz-legend" id="viz-legend"></div><div class="viz-grid" id="viz-levels"></div><h2>抽样对照 <small>ground truth / prediction / 误差</small></h2><div class="viz-tabs" id="viz-tabs"></div><div class="viz-samples" id="viz-samples"></div><h2>类别混淆 <small>行归一化</small></h2><div class="viz-confusion" id="viz-confusion"></div><h2>类别 × 视数 <small>每格为该类召回率，越深越差</small></h2><div class="viz-recall-grid" id="viz-recall-grid"></div><h2>置信度与错误 <small>只错在高置信处才是问题</small></h2><div class="viz-conf" id="viz-conf"></div>
+</main>
+<footer class="container">
+  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css（本地托管）</small>
+</footer>
+<script src="../../assets/js/visual.js" defer></script>
+</body>
+</html>

@@ -144,6 +144,13 @@
   color: var(--faint);
   padding-bottom: var(--s3);
 }
+.table thead th {
+  background: var(--bg-soft);
+}
+
+.table thead th:first-child { border-radius: var(--r-md) 0 0 0; }
+.table thead th:last-child { border-radius: 0 var(--r-md) 0 0; }
+
 .table th {
   font-family: var(--font-mono);
   font-size: 10.5px;

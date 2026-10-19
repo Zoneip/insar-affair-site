@@ -5,6 +5,9 @@
   const S = { data: null, run: null, upto: 0, playing: false, timer: null, speed: 2 };
   const $ = (id) => document.getElementById(id);
   const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // The script is shared by templates; do nothing if this page is not the dashboard.
+  const REQUIRED = ["statusPill", "statusText", "runbar", "error", "kpis"];
+  if (!REQUIRED.every((id) => document.getElementById(id))) return;
 
   const fmt = (v, d = 4) => (v === null || v === undefined || Number.isNaN(v) ? "—" : Number(v).toFixed(d));
   const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -146,8 +149,9 @@
       if (S.data.live) {
         setStatus("直播中", "live");
       } else {
+        // Show the finished run as-is; replay only starts on an explicit click.
         setStatus("已完成", "");
-        if (!REDUCED) play();
+        $("play").textContent = "回放";
       }
     } else if (S.data.live) {
       const current = S.data.runs.find((r) => r.id === S.run.id);

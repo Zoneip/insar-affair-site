@@ -3,9 +3,28 @@ window.LiveCharts = (() => {
   "use strict";
 
   const MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-  const INK = "#0a0a0a";
-  const DIM = "#6b6b6b";
-  const GRID = "rgba(0,0,0,.07)";
+  // Colours come from the site tokens so charts match the palette (teal lead,
+  // orange second).  Fallbacks keep the file usable standalone.
+  const ROOT = getComputedStyle(document.documentElement);
+  const tok = (name, fallback) => (ROOT.getPropertyValue(name).trim() || fallback);
+  const INK = tok("--c1", "#0f766e");
+  const DIM = tok("--c2", "#d97706");
+  const GRID = tok("--grid-line", "rgba(27,42,51,.07)");
+  const LINE = tok("--line", "#e7e2d6");
+  const LINE_STRONG = tok("--line-strong", "#d3ccbb");
+  const WASH = tok("--accent-wash", "#e3eeea");
+  const PANEL = tok("--panel", "#ffffff");
+  const FAINT = tok("--faint", "#9a958a");
+  const SLATE = tok("--c3", "#4a6fa5");
+  const GREY = tok("--c4", "#9aa5b1");
+
+  // Area fills follow their own line colour so two series never share a wash.
+  const wash = (hex, alpha = 0.1) => {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+    if (!m) return hex;
+    const n = parseInt(m[1], 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+  };
 
   const charts = {};
 
@@ -20,14 +39,14 @@ window.LiveCharts = (() => {
     return {
       x: {
         grid: { color: GRID, drawTicks: false },
-        border: { color: "#e3e3e3" },
+        border: { color: LINE },
         ticks: { color: DIM, maxRotation: 0, autoSkipPadding: 12 },
       },
       y: {
         grid: { color: GRID, drawTicks: false },
         border: { display: false },
         ticks: { color: DIM, padding: 8 },
-        title: title ? { display: true, text: title, color: "#5a5a5a", font: { size: 9 } } : undefined,
+        title: title ? { display: true, text: title, color: FAINT, font: { size: 9 } } : undefined,
       },
     };
   }
@@ -39,8 +58,8 @@ window.LiveCharts = (() => {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "#ffffff",
-        borderColor: "#d8d8d8",
+        backgroundColor: PANEL,
+        borderColor: LINE_STRONG,
         borderWidth: 1,
         titleFont: { family: MONO, size: 11 },
         bodyFont: { family: MONO, size: 11 },
@@ -70,7 +89,7 @@ window.LiveCharts = (() => {
             label: "train",
             data: history.map((h) => h.train_loss),
             borderColor: INK,
-            backgroundColor: "rgba(10,10,10,.06)",
+            backgroundColor: wash(INK),
             fill: true,
             borderWidth: 1.4,
             pointRadius: 0,
@@ -98,7 +117,7 @@ window.LiveCharts = (() => {
           label: "val F1",
           data: history.map((h) => h.val_f1),
           borderColor: INK,
-          backgroundColor: "rgba(10,10,10,.06)",
+          backgroundColor: wash(INK),
           fill: true,
           borderWidth: 1.4,
           pointRadius: 0,
@@ -120,7 +139,7 @@ window.LiveCharts = (() => {
         datasets: [{
           label: "lr",
           data: history.map((h) => h.lr),
-          borderColor: "#9a9a9a",
+          borderColor: SLATE,
           borderWidth: 1.4,
           pointRadius: 0,
           stepped: "before",
@@ -137,7 +156,7 @@ window.LiveCharts = (() => {
         datasets: [{
           label: "weighted F1",
           data: Ls.map((L) => run.tests[L].f1_weighted),
-          backgroundColor: "#b8b8b8",
+          backgroundColor: GREY,
           hoverBackgroundColor: INK,
           borderWidth: 0,
           barPercentage: 0.62,

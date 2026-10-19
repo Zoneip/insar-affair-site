@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DANI-NET 复现 · InSAR_affair</title>
 <meta name="description" content="DANI-NET 复现的训练看板、数据分析、缺陷分析与文档。">
-<meta name="theme-color" content="#fafafa">
+<meta name="theme-color" content="#faf8f3">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/vendor/pico/pico.min.css">
 <link rel="stylesheet" href="assets/css/site.css">
@@ -15,7 +15,7 @@
 <header class="site-nav">
   <nav class="container">
     <ul><li><a class="brand" href="index.html">INSAR / AFFAIR</a></li></ul>
-    <ul><li><a href="index.html" aria-current="page">总览</a></li><li><a href="live/index.html">训练看板</a></li><li><a href="analysis/index.html">数据分析</a></li><li><a href="gaps/index.html">缺陷分析</a></li><li><a href="documents/index.html">文档</a></li></ul>
+    <ul><li><a href="index.html" aria-current="page">总览</a></li><li><a href="live/index.html">训练看板</a></li><li><a href="analysis/index.html">数据分析</a></li><li><a href="visual/index.html">可视化</a></li><li><a href="gaps/index.html">缺陷分析</a></li><li><a href="documents/index.html">文档</a></li></ul>
   </nav>
 </header>
 <main class="container" id="main">
@@ -24,7 +24,7 @@
   <h1>DANI-NET 复现</h1>
   <p class="sub">重复轨道 InSAR 变化检测的合成链路复现：物理模型、在线数据生成、全卷积网络与训练评估。</p>
   <p class="meta">Ascend 910 · 单卡 · CANN 9.0</p>
-</header><div class="stats"><article><span class="k">weights</span><span class="v">1,498,324</span></article><article><span class="k">epochs</span><span class="v">15</span></article><article><span class="k">weighted F1 · L=121</span><span class="v">0.792</span></article><article><span class="k">train time</span><span class="v">7.9<small> min</small></span></article></div>
+</header><section class="guide-panel" aria-label="实时进度"><header class="gp-head"><span class="gp-tag">STATUS · 人工维护</span><span class="gp-hint">内容见 docs/content/status-panel.md</span></header><div class="gp-grid"><section class="gp-block"><h3>实时进度</h3><div class="gp-body"><ul><li><strong>当前训练</strong>：10 blocks · 200k patch/epoch · 多 seed</li><li><strong>实测吞吐</strong>：346.7 patch/s（10 blocks + 200k）</li><li><strong>单轮耗时</strong>：epoch ≈ 9.6 min</li><li><strong>任务完成预估时间</strong>：明天凌晨三点（19:00 UTC · 03:00 CST）</li></ul></div></section><section class="gp-block"><h3>当前任务</h3><div class="gp-body"><ol><li><strong>论文复现</strong> — 缺真实数据集，且论文数据不可达；合成侧继续跑，真实数据部分挂起。</li><li><strong>InSAR 矩阵分割</strong> — 同样缺真实数据；需要的是<strong>带标注的相干矩阵数据</strong>，应尽快提上日程。</li></ol></div></section><section class="gp-block"><h3>人工备注</h3><div class="gp-body"><ul><li>面板内容由人工维护，直接改本文件即可，下次构建生效。</li></ul></div></section></div></section><div class="stats"><article><span class="k">weights</span><span class="v">1,498,324</span></article><article><span class="k">epochs</span><span class="v">25</span></article><article><span class="k">weighted F1 · L=121</span><span class="v">0.794</span></article><article><span class="k">train time</span><span class="v">14.6<small> min</small></span></article></div>
 <div class="entries">
   <a href="live/index.html">
     <span class="idx">01</span><h2>训练看板</h2>
@@ -36,21 +36,27 @@
     <p>实验设置、四组对照结果与三条结论，含逐类检测概率。</p>
     <span class="arrow">查看 →</span>
   </a>
+  <a href="visual/index.html">
+    <span class="idx">03</span><h2>可视化</h2>
+    <p>逐像素分割热力图、不同视数下的泛化、类别置信度与错分分布。</p>
+    <span class="arrow">查看 →</span>
+  </a>
   <a href="gaps/index.html">
-    <span class="idx">03</span><h2>缺陷分析</h2>
+    <span class="idx">04</span><h2>缺陷分析</h2>
     <p>已证实缺陷、改进所需资源与设备、尚未想清的疑难点。</p>
     <span class="arrow">查看 →</span>
   </a>
   <a href="documents/index.html">
-    <span class="idx">04</span><h2>文档</h2>
-    <p>复现说明、分析报告与代码包，可页内阅读或下载 Word。</p>
+    <span class="idx">05</span><h2>文档</h2>
+    <p>复现说明、分析报告与缺陷分析，可页内阅读或下载 Word。</p>
     <span class="arrow">打开 →</span>
   </a>
 </div>
 
 </main>
 <footer class="container">
-  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css + Chart.js（本地托管）</small>
+  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css（本地托管）</small>
 </footer>
+
 </body>
 </html>

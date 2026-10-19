@@ -26,6 +26,21 @@
 
 原始产出（含口语稿与代码 zip）留在 `report/<YYYY-MM-DD>/`，不入库；本目录只放站点文件（HTML/SVG/CSS）与三份 `.md` 原文。
 
+## 站点页面（GitHub Pages）
+
+| 页面 | 路径 | 内容 |
+| --- | --- | --- |
+| 总览 | `/` | 各分区入口卡片 |
+| 训练看板 | `/live/` | 逐 epoch 指标、回放（不自动播放） |
+| 数据分析 | `/analysis/` | 四组对照实验设置与结论 |
+| 可视化 | `/visual/` | 两条并行线的入口 |
+| └ 矩阵分割 | `/visual/segmentation/` | 逐像素热力图、混淆、置信度 |
+| └ 论文复现 | `/visual/reproduction/` | F1–视数曲线、训练过程、吞吐、逐节状态 |
+| 缺陷分析 | `/gaps/` | 缺陷清单、所需资源、疑难点 |
+| 文档 | `/documents/` | 三份说明/报告，可页内阅读或下载 Word |
+
+两个可视化子页各自维护 `data.json`，互不影响：分割页由 `daninet/tools/visual_samples.py` 在 A3 上生成，复现页由 `live/data.json` 在 `build_pages.py` 里派生。
+
 ## 分层规则
 
 1. 文档少时平铺，避免过早建目录。
