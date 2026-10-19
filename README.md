@@ -6,7 +6,10 @@
 
 | 文档 | 内容 |
 | --- | --- |
-| （暂无） | 项目说明、架构说明、调研报告、操作手册、交接记录将在此登记 |
+| `docs/content/segmentation.md` | **InSAR 矩阵分割**：SVM 历史基线、CNN 当前主线、daninet 方案占位（置顶，长期维护） |
+| `docs/content/analysis.md` | 数据分析：四组对照实验设置与结论 |
+| `docs/content/gaps.md` | 缺陷清单、改进所需资源、疑难点 |
+| `docs/content/status-panel.md` | 总览状态面板（人工维护） |
 
 > **复现报告**：`daninet/README.md`（14 KB，已入库）是当前最完整的复现说明，含公式对照、复现发现（Eq. 6 方向、Table IV 不自洽）、训练配置与结果表。后续可提炼为 `docs/reproduction-report.md` 并在本索引登记。
 

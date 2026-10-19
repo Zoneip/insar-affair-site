@@ -2,6 +2,18 @@
   "generated_at": "2026-10-19",
   "files": [
     {
+      "title": "InSAR 矩阵分割",
+      "slug": "segmentation",
+      "desc": "SVM 历史基线、CNN 当前主线与 daninet 方案占位；置顶维护",
+      "md": "segmentation.md",
+      "size": 7611,
+      "sha256": "f38ef909806c",
+      "updated": "2026-10-19",
+      "read": "../read/segmentation.html",
+      "docx": "segmentation.docx",
+      "docx_size": 17253
+    },
+    {
       "title": "复现说明",
       "slug": "reproduction",
       "desc": "DANI-NET 复现的完整说明：公式对照、复现发现、结果表",
@@ -11,7 +23,7 @@
       "updated": "2026-10-19",
       "read": "../read/reproduction.html",
       "docx": "reproduction.docx",
-      "docx_size": 22671
+      "docx_size": 22670
     },
     {
       "title": "数据分析",
@@ -23,7 +35,7 @@
       "updated": "2026-10-19",
       "read": "../read/analysis.html",
       "docx": "analysis.docx",
-      "docx_size": 13592
+      "docx_size": 13591
     },
     {
       "title": "缺陷分析",

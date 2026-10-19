@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InSAR 矩阵分割 · InSAR_affair</title>
+<meta name="description" content="SVM 历史基线、CNN 当前主线与 daninet 方案占位；置顶维护">
+<meta name="theme-color" content="#faf8f3">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="../../index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="../../index.html">总览</a></li><li><a href="../../live/index.html">训练看板</a></li><li><a href="../../analysis/index.html">数据分析</a></li><li><a href="../../visual/index.html">可视化</a></li><li><a href="../../gaps/index.html">缺陷分析</a></li><li><a href="../../documents/index.html" aria-current="page">文档</a></li></ul>
+  </nav>
+</header>
+<main class="container" id="main">
+<header class="page-head">
+  <p class="eyebrow">document · segmentation</p>
+  <h1>InSAR 矩阵分割</h1>
+  <p class="sub">SVM 历史基线、CNN 当前主线与 daninet 方案占位；置顶维护</p>
+  <p class="meta">updated 2026-10-19</p>
+</header>
+<div class="reader-actions">
+  <a role="button" class="secondary outline" href="../index.html">← 返回文档列表</a>
+  <a role="button" class="outline" href="../files/segmentation.docx" download>下载 Word</a>
+</div>
+<article class="prose"><p>从动态 N×N 相关系数矩阵中检测沿主对角线的连续块边界。本文档整理现有两条技术路线（SVM 历史基线、CNN 当前主线）的口径与结论，并为 <strong>daninet 方案</strong>预留位置——新模型训练完成后按同一格式补入顶部。</p>
+<blockquote><p>素材来源：<code>workspace/corr-edge-detection/</code>（<code>SVM_HISTORY_TECHNICAL_DOCUMENT.md</code>、<code>CNN_TECHNICAL_DOCUMENT.md</code>、<code>TECHNICAL_REPORT.md</code>、<code>README.md</code>）。历史 SVM 代码位于该仓库提交 <code>1658ac7</code> 的 <code>svm/</code>，当前工作树不再包含。</p></blockquote>
+<hr>
+<h2 id="一-daninet-方案-占位-待新模型训练后补充">一、daninet 方案（占位 · 待新模型训练后补充）</h2>
+<p><strong>状态：预留</strong> — 你训练出新模型后，把下列条目填满即可替换本段。</p>
+<div class="table-wrap"><table><thead><tr><th>项</th><th>内容</th></tr></thead><tbody><tr><td class="">输入</td><td class="">N×N 相关系数矩阵（待确认通道数与预处理）</td></tr><tr><td class="">输出</td><td class="">长度 N−1 的边界向量，或逐位置概率</td></tr><tr><td class="">网络结构</td><td class="">待补（层数 / 通道 / 感受野）</td></tr><tr><td class="">训练配置</td><td class="">待补（数据量、epoch、batch、学习率日程）</td></tr><tr><td class="">权重位置</td><td class="">待补</td></tr><tr><td class="">Test Exact</td><td class="">待补</td></tr><tr><td class="">Rect F1 / Boundary F1</td><td class="">待补</td></tr><tr><td class="">与 CNN 主线的差异</td><td class="">待补</td></tr></tbody></table></div>
+<p>填写约定：</p>
+<ol><li>数值必须附 <code>outputs/...</code> 下的 JSON 路径，格式与「四、对照表」一致。</li><li>不确定的写「待补」，不要用估计值填表。</li><li>补充后同步更新 <code>docs/visual/</code> 下对应可视化数据。</li></ol>
+<hr>
+<h2 id="二-svm-方案-历史基线">二、SVM 方案（历史基线）</h2>
+<p>历史 <code>svm/</code> 目录下是<strong>两条不同的路径</strong>，不能当作同一个模型比较：</p>
+<div class="table-wrap"><table><thead><tr><th>路径</th><th>任务</th><th>训练数据</th><th>输入 → 输出</th></tr></thead><tbody><tr><td class=""><code>train.py</code> + <code>classify.py</code></td><td class="">矩阵级二分类</td><td class="">程序生成的合成矩阵</td><td class="">矩阵 → 「有无分块结构」</td></tr><tr><td class=""><code>train_boundary.py</code> + <code>evaluate_boundary.py</code></td><td class="">逐候选边界分类</td><td class="">带人工标签的真实数据</td><td class="">矩阵 → N−1 个边界判定</td></tr></tbody></table></div>
+<p>只有第二条与当前 CNN 任务可比；矩阵级 SVM 只能回答「是否存在分块」，给不出边界位置。</p>
+<h3 id="2-1-共同特征基础">2.1 共同特征基础</h3>
+<p><code>svm/features.py</code> 把任意方阵压成 <strong>24 维</strong>向量（先做 (C+Cᵀ)/2 对称化）：</p>
+<div class="table-wrap"><table><thead><tr><th>组别</th><th>维数</th><th>内容</th></tr></thead><tbody><tr><td class="">非对角元素统计</td><td class="num">6</td><td class="">均值、标准差、偏度、峰度、10/90 分位数</td></tr><tr><td class="">特征值谱</td><td class="num">5</td><td class="">最大特征值、条件数、前三占比、首二 gap 比、有效秩</td></tr><tr><td class="">SPD 对角 profile</td><td class="num">6</td><td class="">最大值、均值、标准差、&gt;0.3 计数、90/50 分位</td></tr><tr><td class="">行/列均值不连续性</td><td class="num">4</td><td class="">行均值与列均值的标准差、极差</td></tr><tr><td class="">一阶梯度</td><td class="num">3</td><td class="">水平/垂直差分最大值、二者比值</td></tr></tbody></table></div>
+<p>真实边界 SVM 在此基础上对每个候选位置 p 展开 <strong>62 维局部边界特征</strong>（左右上下文、对称差分、位置先验等），并做标准化与样本权重平衡。</p>
+<h3 id="2-2-训练与判定">2.2 训练与判定</h3>
+<ul><li>核：RBF-SVM；模型选择走验证集网格（C、γ）。</li><li>阈值：按尺寸在验证集上分别校准；解码后经 <code>rectangles_from_boundary</code> 转成对角矩形。</li><li>评估口径与 CNN 完全一致（见「五、术语与指标」）。</li></ul>
+<h3 id="2-3-局限与复现风险">2.3 局限与复现风险</h3>
+<ol><li>当前工作树<strong>没有</strong> SVM 源码与权重，只能从 <code>1658ac7</code> 用隔离 worktree 恢复。</li><li>矩阵级与边界级结果不可混用；历史报告里的两类数字分属不同任务。</li><li>62 维特征依赖手工阈值与标准化参数，换数据分布需要重新校准。</li><li>合成 SVM 的数据生成器与真实边界 SVM 不是同一套，指标不能横向拼表。</li></ol>
+<hr>
+<h2 id="三-cnn-方案-当前主线">三、CNN 方案（当前主线）</h2>
+<h3 id="3-1-问题形式化">3.1 问题形式化</h3>
+<p>输入 C ∈ ℝᴺˣᴺ（近似对称），输出候选边界向量 b ∈ {0,1}ᴺ⁻¹：位置 p 表示索引 p−1 与 p 之间是否发生块边界。边界集合排序后转成对角矩形 (qᵢ, qᵢ₊₁)²。二维块检测因此转成一维多标签边界检测。</p>
+<h3 id="3-2-输入特征-5-通道">3.2 输入特征（5 通道）</h3>
+<p>原始矩阵、排除对角线后的矩阵内标准化、对称局部差分、前两个主特征向量绝对外积的谱先验——共 5 通道，按同尺寸 batch 组织。</p>
+<h3 id="3-3-网络与损失">3.3 网络与损失</h3>
+<ul><li><strong>骨干</strong>：dilation 1/2/4 多尺度残差，宽度 32/64/128 三档；主头融合候选位置左右全局上下文；32/64 档另接深监督侧头。</li><li><strong>损失</strong>：Focal + Dice + <code>0.1</code> 非对称边界数约束（欠/过分割 2:1）+ <code>0.05</code> 块一致性正则 + <code>0.5</code> subset（最差位置）损失。</li><li><strong>镜像等变正则</strong>（默认 0.2）：z(C) ≈ reverse(z(flip(C)))，不依赖标签，降低随机种子方差。</li><li><strong>可选两阶段</strong>：先用全部 2075 个矩阵做掩码重建预训练，再 <code>--init-checkpoint</code> 微调。</li></ul>
+<h3 id="3-4-数据与评估">3.4 数据与评估</h3>
+<ul><li>2075 个真实矩阵，按<strong>来源目录隔离</strong>切成 76% / 10% / 14%（训练 767 / 验证 104 / 测试 140）；划分种子与训练种子解耦。</li><li>尺寸范围：当前只用 14×14、17×17，默认排除 32×32；训练中两尺寸等量 batch。</li><li>模型选择：验证集<strong>分尺寸宏平均 Rect F1</strong>；阈值按尺寸校准（单模型 14→0.55、17→0.65；集成另行校准）。</li><li>固定 10 个随机种子（<code>config/experiment_seeds.json</code>，2026-08-01 一次性生成），后续实验复用同一组。</li></ul>
+<h3 id="3-5-当前结果">3.5 当前结果</h3>
+<div class="table-wrap"><table><thead><tr><th>配置</th><th>模型数</th><th>阈值 14/17</th><th>Test Exact</th><th>Rect F1</th><th>Boundary F1</th></tr></thead><tbody><tr><td class="">最佳单模型（seed06，镜像 0.3）</td><td class="num">1</td><td class="">0.55 / 0.65</td><td class=""><strong>0.6929</strong></td><td class="num">0.8960</td><td class="num">0.8788</td></tr><tr><td class="">集成（镜像 0.2）</td><td class="num">10</td><td class="">0.50 / 0.55</td><td class="num">0.6786</td><td class="num">0.8923</td><td class="">见集成报告</td></tr><tr><td class="">混合集成（镜像 0.2+0.3）</td><td class="num">20</td><td class="num">—</td><td class="num">0.6786</td><td class="num">—</td><td class="num">—</td></tr></tbody></table></div>
+<p>单模型 10 种子均值：基线 <code>0.6064 ± 0.0292</code>；镜像 0.2 集成成员 <code>0.6457 ± 0.0239</code>。</p>
+<blockquote><p>Exact Accuracy 对单个边界错误敏感，候选准确率又受负类主导，因此必须与 Boundary F1、Rect F1、边界数 MAE 一起读。</p></blockquote>
+<h3 id="3-6-增强与合成数据">3.6 增强与合成数据</h3>
+<p>整块置换 / 镜像 / 对称噪声增强、因子模型合成块矩阵都已实现，但消融显示在当前数据分布下<strong>反而掉点</strong>，默认关闭。</p>
+<hr>
+<h2 id="四-三条路线对照">四、三条路线对照</h2>
+<div class="table-wrap"><table><thead><tr><th>维度</th><th>SVM（历史）</th><th>CNN（当前主线）</th><th>daninet（待训练）</th></tr></thead><tbody><tr><td class="">输出粒度</td><td class="">矩阵级二分类 / 逐候选边界</td><td class="">逐候选边界 N−1</td><td class="">待补</td></tr><tr><td class="">特征</td><td class="">24 维矩阵特征 + 62 维局部特征</td><td class="">5 通道端到端</td><td class="">待补</td></tr><tr><td class="">结构先验</td><td class="">手工特征 + RBF 核</td><td class="">多尺度残差 + 全局上下文</td><td class="">待补</td></tr><tr><td class="">尺寸泛化</td><td class="">需按尺寸校准阈值</td><td class="">同上</td><td class="">待补</td></tr><tr><td class="">最佳 Test Exact</td><td class="">历史数字不可与下者混比</td><td class="">0.6929（单模型）</td><td class="">待补</td></tr><tr><td class="">随机性</td><td class="">网格搜索，确定性强</td><td class="">10 种子，<code>±0.02~0.03</code></td><td class="">待补</td></tr><tr><td class="">复现状态</td><td class="">源码需从 <code>1658ac7</code> 恢复</td><td class="">权重与 JSON 齐全</td><td class="">未开始</td></tr></tbody></table></div>
+<hr>
+<h2 id="五-术语与指标">五、术语与指标</h2>
+<div class="table-wrap"><table><thead><tr><th>术语</th><th>定义</th></tr></thead><tbody><tr><td class="">Exact Accuracy</td><td class="">整条 N−1 边界向量与真值完全一致的样本比例</td></tr><tr><td class="">Rect F1</td><td class="">边界→对角矩形，IoU≥0.5 最大二部匹配，逐样本 F1 均值</td></tr><tr><td class="">Boundary F1</td><td class="">逐位置边界判定的 F1</td></tr><tr><td class="">MAE</td><td class="">预测/真值边界数绝对误差均值</td></tr><tr><td class="">over / under rate</td><td class="">预测边界数偏多 / 偏少的样本比例</td></tr><tr><td class="">macro</td><td class="">先按尺寸算指标再对尺寸算术平均</td></tr><tr><td class="">subset 损失</td><td class="">每样本全部候选 Focal BCE 的最大值，batch 内平均</td></tr><tr><td class="">镜像等变</td><td class="">ℒ(z(C), reverse(z(flip(C))))，无标签几何正则</td></tr></tbody></table></div>
+<hr>
+<h2 id="六-文档维护">六、文档维护</h2>
+<ol><li>本文档随模型训练更新；<strong>daninet 段</strong>（第一节）在新模型落地后由训练者填写。</li><li>数值一律注明工件路径（<code>outputs/recommended/...</code> 或 <code>runs/&lt;run&gt;/metrics.json</code>）。</li><li>指标定义变更时先改第五节，再同步其他章节。</li></ol></article>
+
+</main>
+<footer class="container">
+  <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css（本地托管）</small>
+</footer>
+
+</body>
+</html>
