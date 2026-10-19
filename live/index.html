@@ -1,34 +1,45 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DANI-NET 训练直播 · InSAR_affair</title>
-<meta name="description" content="DANI-NET 复现的训练看板：损失、验证 F1、学习率日程与测试视数对比，支持直播轮询与历史回放。">
-<link rel="stylesheet" href="style.css">
+<meta name="description" content="DANI-NET 复现训练看板：损失、验证 F1、学习率日程与测试视数对比，支持回放与训练中轮询。">
+<meta name="theme-color" content="#0a0e13">
+<meta property="og:title" content="DANI-NET 训练直播 · InSAR_affair">
+<meta property="og:description" content="单卡 Ascend910 上的 DANI-NET 复现：逐 epoch 损失、F1 与测试视数对比。">
+<meta property="og:type" content="website">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/live.css">
 </head>
-<body>
+<body class="live">
+
+<a class="skip-link" href="#main">跳到主要内容</a>
 
 <header class="top">
   <div class="brand">
-    <span class="logo"></span>
+    <span class="logo" aria-hidden="true"></span>
     <span class="name">InSAR_affair</span>
-    <span class="slash">/</span>
+    <span class="slash" aria-hidden="true">/</span>
     <span class="sub">DANI-NET 训练直播</span>
   </div>
   <div class="status">
-    <span class="pill" id="statusPill"><span class="dot"></span><span id="statusText">加载中</span></span>
-    <span class="clock" id="clock">--:--:--</span>
+    <span class="pill" id="statusPill" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="statusText">加载中</span></span>
+    <span class="clock" id="clock" aria-hidden="true">--:--:--</span>
   </div>
 </header>
 
-<main>
+<main id="main">
+  <p id="error" class="error-banner" role="alert" hidden></p>
+
   <section class="runbar" id="runbar" aria-label="训练批次"></section>
 
   <section class="kpis" id="kpis" aria-live="polite"></section>
 
-  <section class="controls">
-    <button id="play" class="btn primary">回放</button>
+  <section class="controls" aria-label="回放控制">
+    <button id="play" class="btn primary" type="button">回放</button>
     <label class="speed">速度
       <select id="speed">
         <option value="1">×1</option>
@@ -38,7 +49,7 @@
       </select>
     </label>
     <div class="progress">
-      <div class="bar"><i id="progressBar"></i></div>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="回放进度"><i id="progressBar"></i></div>
       <span id="progressText">0 / 0</span>
     </div>
   </section>
@@ -64,24 +75,25 @@
 
     <figure class="panel span2">
       <figcaption>训练日志<span class="hint">随回放推进</span></figcaption>
-      <pre id="log" class="log"></pre>
+      <pre id="log" class="log" tabindex="0" aria-label="训练日志"></pre>
     </figure>
     <figure class="panel">
       <figcaption>说明</figcaption>
       <p class="note" id="note"></p>
-      <p class="note" style="margin-top:12px">
-        页面为静态站点：训练进行时由 <code>export_live.py</code> 重写 <code>data.json</code>，前端每 15 秒轮询；
-        没有训练任务时自动切换为历史回放。
+      <p class="note">
+        页面为静态站点：训练进行时由 <code>export_live.py</code> 重写 <code>data.json</code>，
+        前端每 15 秒轮询；没有训练任务时自动切换为历史回放。
       </p>
       <p class="note"><a href="../index.html">返回报告总览</a></p>
     </figure>
   </section>
 
-  <footer>
+  <footer class="foot">
     数据来源 daninet/runs/*/metrics.json 与 log.txt · 单卡 Ascend910_9382（CANN 9.0 / torch_npu 2.10）· 页面无第三方依赖
   </footer>
 </main>
 
-<script src="app.js"></script>
+<script src="../assets/js/charts.js"></script>
+<script src="../assets/js/live.js"></script>
 </body>
 </html>

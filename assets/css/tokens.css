@@ -1,0 +1,89 @@
+/* Design tokens. Light = reports, dark = live dashboard. */
+:root {
+  color-scheme: light;
+
+  /* type */
+  --font-sans: -apple-system, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-serif: Georgia, "Songti SC", "Noto Serif SC", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --text-xs: 11.5px;
+  --text-sm: 13px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-xl: clamp(20px, 2.4vw, 24px);
+  --text-2xl: clamp(24px, 3.4vw, 32px);
+  --leading: 1.72;
+  --measure: 68ch;
+
+  /* space (4px scale) */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+
+  /* radii: child <= parent, concentric */
+  --r-lg: 16px;
+  --r-md: 12px;
+  --r-sm: 8px;
+  --r-pill: 999px;
+
+  /* light surfaces */
+  --bg: #fbfaf9;
+  --bg-soft: #f4f2f0;
+  --panel: #ffffff;
+  --ink: #1c1917;
+  --ink-soft: #44403c;
+  --muted: #6b6560;
+  --line: #e6e3e0;
+  --line-strong: #d6d1cd;
+
+  /* accents: one hue family, tinted consistently */
+  --accent: #0f766e;
+  --accent-ink: #0b5d57;
+  --accent-soft: rgba(15, 118, 110, 0.08);
+  --warn: #b45309;
+  --warn-soft: rgba(180, 83, 9, 0.08);
+  --violet: #6d4aff;
+
+  /* chart palette: distinguishable for deuteranopia */
+  --c1: #0f766e;
+  --c2: #b45309;
+  --c3: #2563eb;
+  --c4: #7c3aed;
+
+  /* elevation & motion */
+  --shadow-1: 0 1px 2px rgba(28, 25, 23, 0.05);
+  --shadow-2: 0 10px 28px rgba(28, 25, 23, 0.08);
+  --dur: 160ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0a0e13;
+  --bg-soft: #0d141d;
+  --panel: #111823;
+  --ink: #e6edf3;
+  --ink-soft: #c3ccd8;
+  --muted: #8b98a9;
+  --line: #1e2a38;
+  --line-strong: #2b3b4e;
+
+  --accent: #34d3ee;
+  --accent-ink: #7fe6f6;
+  --accent-soft: rgba(52, 211, 238, 0.1);
+  --warn: #f5a524;
+  --warn-soft: rgba(245, 165, 36, 0.12);
+
+  --c1: #34d3ee;
+  --c2: #f5a524;
+  --c3: #3ddc97;
+  --c4: #a78bfa;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 14px 36px rgba(0, 0, 0, 0.45);
+}

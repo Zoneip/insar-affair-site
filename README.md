@@ -14,10 +14,11 @@
 
 按日期归档的成套报告：代码说明书、数据分析报告、缺陷与改进分析。**只在用户主动要求时生成**，流程见 `.dsh/skills/project-report/SKILL.md`。
 
-本站点由 GitHub Pages 从 `main` 分支 `/docs` 目录发布（`.nojekyll` 关闭 Jekyll）：
+站点由公开仓库 `Zoneip/insar-affair-site` 发布（本仓库为 private，免费账户不支持私有仓库 Pages；每次发布用 `.dsh/skills/project-report/scripts/publish_site.sh` 同步 `docs/`）：
 
-- 总览：`https://zoneip.github.io/InSAR_affair/`
-- 单次：`https://zoneip.github.io/InSAR_affair/reports/<YYYY-MM-DD>/`
+- 总览：`https://zoneip.github.io/insar-affair-site/`
+- 训练直播：`https://zoneip.github.io/insar-affair-site/live/`
+- 单次报告：`https://zoneip.github.io/insar-affair-site/reports/<YYYY-MM-DD>/`
 
 | 日期 | 目录 | 内容 |
 | --- | --- | --- |

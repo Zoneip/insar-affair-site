@@ -1,0 +1,92 @@
+/* Report pages + site index (light). Depends on tokens.css + base.css. */
+.wrap { max-width: 980px; margin: 0 auto; padding: var(--s6) var(--s5) 96px; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+  padding: var(--s3) var(--s5);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar .brand { font-family: var(--font-serif); font-weight: 700; letter-spacing: 0.01em; text-decoration: none; color: var(--ink); border: 0; }
+.topbar nav { display: flex; gap: var(--s4); flex-wrap: wrap; }
+.topbar nav a {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  padding: 3px 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.topbar nav a:hover { color: var(--ink); }
+.topbar nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+.topbar .date { margin-left: auto; font-size: var(--text-sm); color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.lede { font-size: var(--text-lg); color: var(--ink-soft); max-width: 64ch; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s3); margin: var(--s5) 0 var(--s6); }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s4); }
+.kpi b { display: block; font-size: 26px; font-family: var(--font-serif); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.kpi span { font-size: var(--text-xs); color: var(--muted); }
+
+.cards { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin: var(--s2) 0 var(--s3); }
+.card {
+  display: block;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s5);
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); border-color: var(--line-strong); }
+.card h3 { margin: 0 0 6px; color: var(--ink); }
+.card p { margin: 0; font-size: var(--text-sm); color: var(--muted); }
+.tag {
+  display: inline-block;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--r-pill);
+  padding: 2px 9px;
+  margin-bottom: 10px;
+}
+
+figure.chart {
+  margin: var(--s6) 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s4) var(--s4) 10px;
+}
+figure.chart svg { width: 100%; height: auto; display: block; }
+figcaption { font-size: var(--text-sm); color: var(--muted); margin-top: 10px; line-height: 1.6; }
+
+.table-wrap { overflow-x: auto; margin: var(--s4) 0; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: var(--text-sm); }
+th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background: var(--bg-soft); font-weight: 600; font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: color-mix(in srgb, var(--bg-soft) 60%, transparent); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.note { font-size: var(--text-sm); color: var(--muted); }
+.toc { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--s3) var(--s5); margin: var(--s5) 0; font-size: var(--text-sm); }
+.toc a { display: inline-block; margin: 2px 14px 2px 0; border: 0; }
+
+footer { max-width: 980px; margin: 0 auto; padding: var(--s5); color: var(--muted); font-size: var(--text-xs); border-top: 1px solid var(--line); }
+
+@media (max-width: 700px) {
+  .wrap { padding: var(--s5) var(--s4) 72px; }
+  .topbar { gap: var(--s3); padding: 10px var(--s4); }
+  .topbar nav { gap: var(--s3); }
+  .topbar .date { display: none; }
+  h1 { font-size: 24px; }
+}
