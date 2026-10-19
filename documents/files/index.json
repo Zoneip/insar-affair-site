@@ -3,38 +3,49 @@
   "files": [
     {
       "title": "复现说明",
-      "name": "daninet-README.md",
-      "kind": "markdown",
+      "slug": "reproduction",
       "desc": "DANI-NET 复现的完整说明：公式对照、复现发现、结果表",
+      "md": "reproduction.md",
       "size": 15632,
       "sha256": "d3e669b5d300",
-      "updated": "2026-10-19"
+      "updated": "2026-10-19",
+      "read": "../read/reproduction.html",
+      "docx": "reproduction.docx",
+      "docx_size": 21219
     },
     {
       "title": "数据分析",
-      "name": "analysis.md",
-      "kind": "markdown",
+      "slug": "analysis",
       "desc": "实验设置、对照结果与三条结论",
+      "md": "analysis.md",
       "size": 2632,
       "sha256": "9ebf1c9bcca3",
-      "updated": "2026-10-19"
+      "updated": "2026-10-19",
+      "read": "../read/analysis.html",
+      "docx": "analysis.docx",
+      "docx_size": 12162
     },
     {
       "title": "缺陷分析",
-      "name": "gaps.md",
-      "kind": "markdown",
+      "slug": "gaps",
       "desc": "缺陷清单、所需资源、疑难点",
+      "md": "gaps.md",
       "size": 3132,
       "sha256": "2ce6dcb19452",
-      "updated": "2026-10-19"
+      "updated": "2026-10-19",
+      "read": "../read/gaps.html",
+      "docx": "gaps.docx",
+      "docx_size": 12328
     },
     {
       "title": "复现代码包",
-      "name": "insar-affair-code-2026-10-19.zip",
-      "kind": "zip",
+      "slug": "code",
       "desc": "源码 + 说明，不含权重与数据",
-      "size": 49870,
-      "sha256": "dc5412b4e08e",
+      "md": null,
+      "docx": null,
+      "zip": "insar-affair-code-2026-10-19.zip",
+      "size": 50169,
+      "sha256": "6016e4b010e7",
       "updated": "2026-10-19"
     }
   ]

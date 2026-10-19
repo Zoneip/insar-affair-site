@@ -244,6 +244,8 @@
   white-space: nowrap;
 }
 .doc-row a.dl { border: 0; }
+.doc-row .acts { display: flex; gap: var(--s2); }
+.reader-actions { display: flex; gap: var(--s3); margin: 0 0 var(--s6); flex-wrap: wrap; }
 
 .empty {
   padding: var(--s7) 0;
