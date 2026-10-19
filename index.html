@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InSAR_affair · DANI-NET 复现报告</title>
+<style>:root{--bg:#fbfaf9;--panel:#fff;--ink:#1c1917;--muted:#78716c;--line:#e7e5e4;--accent:#0f766e;--accent2:#b45309;--radius:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.78 -apple-system,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:Georgia,"Songti SC","Noto Serif SC",serif;line-height:1.35;letter-spacing:-.01em;margin:1.6em 0 .6em}
+h1{font-size:30px;margin-top:.4em}
+h2{font-size:22px;padding-bottom:.3em;border-bottom:1px solid var(--line)}
+h3{font-size:17px}
+p{margin:.7em 0}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(15,118,110,.25)}
+a:hover{border-color:var(--accent)}
+.wrap{max-width:980px;margin:0 auto;padding:36px 24px 96px}
+.topbar{position:sticky;top:0;z-index:10;display:flex;gap:22px;align-items:center;padding:12px 24px;background:rgba(251,250,249,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{font-weight:700;letter-spacing:.01em;text-decoration:none;color:var(--ink);border:0;font-family:Georgia,serif}
+.topbar nav{display:flex;gap:18px;flex-wrap:wrap}
+.topbar nav a{color:var(--muted);font-size:14px;padding:3px 0;border-bottom:2px solid transparent;border-radius:0}
+.topbar nav a:hover{color:var(--ink)}
+.topbar nav a.active{color:var(--accent);border-color:var(--accent)}
+.date{margin-left:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.lede{font-size:17px;color:#44403c;max-width:64ch}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:28px 0 36px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.kpi b{display:block;font-size:26px;font-family:Georgia,serif;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:var(--muted)}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin:8px 0 12px}
+.card{display:block;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-decoration:none;color:inherit;border-bottom:1px solid var(--line);transition:transform .15s ease,box-shadow .15s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(28,25,23,.06)}
+.card h3{margin:0 0 6px;color:var(--ink)}
+.card p{margin:0;font-size:14px;color:var(--muted)}
+.tag{display:inline-block;font-size:11px;letter-spacing:.04em;color:var(--accent);background:rgba(15,118,110,.08);border-radius:999px;padding:2px 9px;margin-bottom:10px}
+figure.chart{margin:30px 0;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 10px}
+figure.chart svg{width:100%;height:auto;display:block}
+figcaption{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}
+.table-wrap{overflow-x:auto;margin:20px 0;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:#f8f7f6;font-weight:600;font-size:13px;color:#44403c;white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fcfcfb}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+pre.code{background:#1c1917;color:#e7e5e4;padding:16px 18px;border-radius:12px;overflow-x:auto;font-size:13px;line-height:1.6}
+pre.code code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+code{background:#f2f1ef;padding:.15em .38em;border-radius:5px;font-size:.9em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre.code code{background:none;padding:0;font-size:inherit}
+blockquote{margin:22px 0;padding:12px 18px;border-left:3px solid var(--accent);background:rgba(15,118,110,.045);color:#44403c;border-radius:0 10px 10px 0}
+blockquote p:first-child{margin-top:0}
+blockquote p:last-child{margin-bottom:0}
+ul,ol{padding-left:1.35em}
+li{margin:.3em 0}
+hr{border:0;border-top:1px solid var(--line);margin:34px 0}
+footer{max-width:980px;margin:0 auto;padding:24px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+.note{font-size:13px;color:var(--muted)}
+.toc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 20px;margin:24px 0;font-size:14px}
+.toc a{display:inline-block;margin:2px 14px 2px 0;border:0}
+@media (max-width:700px){.wrap{padding:24px 16px 72px}.topbar{gap:12px;padding:10px 16px}.topbar nav{gap:12px}.date{display:none}h1{font-size:24px}}
+@media print{.topbar{position:static}body{background:#fff}figure.chart{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="topbar"><span class="brand">InSAR_affair</span></header>
+<main class="wrap">
+<h1>DANI-NET 复现报告</h1>
+<p class="lede">按日期归档的成套报告：代码说明书、数据分析报告、缺陷与改进分析。所有数值均可回溯到对应 run 的 metrics.json。</p>
+<div class="cards"><a class="card" href="live/index.html"><span class="tag">LIVE</span><h3>训练直播看板</h3><p>损失、验证 F1、学习率日程与测试视数对比；训练中轮询，空闲时回放。</p></a><p class="note">还没有按日期生成的报告。</p></div>
+</main>
+<footer>DANI-NET 复现 · 由 .dsh/skills/project-report 构建</footer>
+</body>
+</html>
