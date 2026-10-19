@@ -268,8 +268,10 @@
             <td class="num">${((u.rect_precision || 0) * 100).toFixed(1)}</td>
             <td class="num">${(u.mean_absolute_count_error || 0).toFixed(2)}</td></tr>
           </tbody></table>
-        <p class="viz-note dim">${data.run} · 集成 ${(data.members || []).length} 模型 · 解码 ${data.decode_best} ·
-          阈值 14→${th["14"]} 17→${th["17"]} · 17×17 集成 ${(lat.ensemble3_ms || 0).toFixed(2)} ms</p>`;
+        <p class="viz-note dim">${data.run} · ${(data.members || []).length > 1
+            ? `集成 ${(data.members || []).length} 模型`
+            : "单模型"} · 解码 ${data.decode_best} ·
+          阈值 14→${th["14"]} 17→${th["17"]} · 17×17 推理 ${(lat.single_ms || 0).toFixed(2)} ms</p>`;
     }
   }
 

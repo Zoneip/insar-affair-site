@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>块边界分割 · InSAR_affair</title>
+<title>InSAR 块边界分割 · InSAR_affair</title>
 <meta name="description" content="相关矩阵的对角块切分：画廊、难度分解与逐视数指标。">
 <meta name="theme-color" content="#faf8f3">
 <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
@@ -21,9 +21,9 @@
 <main class="container" id="main">
 <header class="page-head">
   <p class="eyebrow">Track 01 · Segmentation</p>
-  <h1>块边界分割</h1>
+  <h1>InSAR 块边界分割</h1>
   <p class="sub">从 N×N 相关矩阵里切出沿对角线的连续块：gallery 看单例，条形图看难度来自哪一维（视数、块宽、边界数）。</p>
-  <p class="meta">edge_ensemble3_notta · 集成 3 模型 · Exact 68.9% · 解码 min_block2/uniform</p>
+  <p class="meta">edge_final_single · 集成 1 模型 · Exact 68.7% · 解码 min_block2/uniform</p>
 </header><p class="lede">该模块（<code>daninet/out/edge_segmentation</code>）现全部用于块分割矩阵。下方指标来自 <code>daninet/runs/edge_ensemble3_notta</code> 的集成评估；逐像素分割的复现产物已移至「论文复现」页。</p><div class="viz-figures" id="viz-edge-figs"></div><h2>Exact 随视数 <small>相干估计越稳，切分越准</small></h2><div class="viz-edge-bars" id="edge-looks"></div><h2>按最小块宽 / 真实边界数分解 <small>解码 min_block2/uniform</small></h2><div class="viz-edge-split"><div class="viz-edge-bars" id="edge-width"></div><div class="viz-edge-bars" id="edge-count"></div></div><h2>块边界指标 <small>逐视数与未见尺寸</small></h2><div id="edge-table"></div>
 </main>
 <footer class="container">
