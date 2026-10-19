@@ -1,21 +1,59 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>InSAR_affair · DANI-NET 复现报告</title>
+<title>DANI-NET 复现 · InSAR_affair</title>
+<meta name="description" content="DANI-NET 复现的训练看板、数据分析、缺陷分析与文档下载。">
+<meta name="theme-color" content="#060606">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/base.css">
-<link rel="stylesheet" href="assets/css/report.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/doc.css">
 </head>
 <body>
-<header class="topbar"><span class="brand">InSAR_affair</span></header>
-<main class="wrap">
-<h1>DANI-NET 复现报告</h1>
-<p class="lede">按日期归档的成套报告：代码说明书、数据分析报告、缺陷与改进分析。所有数值均可回溯到对应 run 的 metrics.json。</p>
-<div class="cards"><a class="card" href="live/index.html"><span class="tag">LIVE</span><h3>训练直播看板</h3><p>损失、验证 F1、学习率日程与测试视数对比；训练中轮询，空闲时回放。</p></a><p class="note">还没有按日期生成的报告。</p></div>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="nav">
+  <a class="brand" href="index.html">INSAR<i>/</i>AFFAIR</a>
+  <nav class="links" aria-label="主导航"><a href="index.html" class="active">总览</a><a href="live/index.html">训练看板</a><a href="analysis/index.html">数据分析</a><a href="gaps/index.html">缺陷分析</a><a href="documents/index.html">文档</a></nav>
+  <span class="right">2026-10-19</span>
+</header>
+<main class="shell" id="main">
+
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Reproduction · 2026</span>
+    <h1>DANI-NET 复现</h1>
+    <p class="sub">重复轨道 InSAR 变化检测的合成链路复现：物理模型、在线数据生成、全卷积网络与训练评估。</p>
+  </div>
+  <div class="meta">Ascend 910<br>单卡 · CANN 9.0</div>
+</div>
+<div class="stats"><div class="stat"><span class="k">weights</span><span class="v">1,498,324</span></div><div class="stat"><span class="k">epochs</span><span class="v">15</span></div><div class="stat"><span class="k">weighted F1 · L=121</span><span class="v">0.792</span></div><div class="stat"><span class="k">train time</span><span class="v">7.9<small> min</small></span></div><div class="stat"><span class="k">device</span><span class="v" style="font-size:14px">NPU</span></div></div>
+<div class="grid-cells cards-4">
+  <a class="card-link" href="live/index.html">
+    <span class="idx">01</span><h3>训练看板</h3>
+    <p>逐 epoch 损失、验证 F1、学习率日程与测试视数对比，支持回放。</p>
+    <span class="arrow">打开 →</span>
+  </a>
+  <a class="card-link" href="analysis/index.html">
+    <span class="idx">02</span><h3>数据分析</h3>
+    <p>实验设置、四组对照结果与三条结论，含逐类检测概率。</p>
+    <span class="arrow">查看 →</span>
+  </a>
+  <a class="card-link" href="gaps/index.html">
+    <span class="idx">03</span><h3>缺陷分析</h3>
+    <p>已证实缺陷、改进所需资源与设备、尚未想清的疑难点。</p>
+    <span class="arrow">查看 →</span>
+  </a>
+  <a class="card-link" href="documents/index.html">
+    <span class="idx">04</span><h3>文档</h3>
+    <p>复现说明、分析报告与代码包，可直接下载。</p>
+    <span class="arrow">打开 →</span>
+  </a>
+</div>
+
 </main>
-<footer>DANI-NET 复现 · 由 .dsh/skills/project-report 构建</footer>
+<footer>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · 站点无第三方依赖</footer>
 </body>
 </html>

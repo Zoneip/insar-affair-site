@@ -3,43 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DANI-NET 训练直播 · InSAR_affair</title>
+<title>训练看板 · InSAR_affair</title>
 <meta name="description" content="DANI-NET 复现训练看板：损失、验证 F1、学习率日程与测试视数对比，支持回放与训练中轮询。">
-<meta name="theme-color" content="#0a0e13">
-<meta property="og:title" content="DANI-NET 训练直播 · InSAR_affair">
+<meta name="theme-color" content="#060606">
+<meta property="og:title" content="DANI-NET 训练看板 · InSAR_affair">
 <meta property="og:description" content="单卡 Ascend910 上的 DANI-NET 复现：逐 epoch 损失、F1 与测试视数对比。">
-<meta property="og:type" content="website">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/css/tokens.css">
 <link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
 <link rel="stylesheet" href="../assets/css/live.css">
 </head>
-<body class="live">
+<body>
 
 <a class="skip-link" href="#main">跳到主要内容</a>
 
-<header class="top">
-  <div class="brand">
-    <span class="logo" aria-hidden="true"></span>
-    <span class="name">InSAR_affair</span>
-    <span class="slash" aria-hidden="true">/</span>
-    <span class="sub">DANI-NET 训练直播</span>
-  </div>
-  <div class="status">
+<header class="nav">
+  <a class="brand" href="../index.html">INSAR<i>/</i>AFFAIR</a>
+  <nav class="links" aria-label="主导航">
+    <a href="../index.html">总览</a>
+    <a href="index.html" class="active">训练看板</a>
+    <a href="../analysis/index.html">数据分析</a>
+    <a href="../gaps/index.html">缺陷分析</a>
+    <a href="../documents/index.html">文档</a>
+  </nav>
+  <span class="right status">
     <span class="pill" id="statusPill" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="statusText">加载中</span></span>
     <span class="clock" id="clock" aria-hidden="true">--:--:--</span>
-  </div>
+  </span>
 </header>
 
-<main id="main">
+<main class="shell" id="main">
+  <div class="page-head">
+    <div>
+      <span class="eyebrow">Training · Live</span>
+      <h1>训练看板</h1>
+      <p class="sub">逐 epoch 的损失与验证指标。训练进行时前端每 15 秒轮询 data.json，空闲时自动回放历史记录。</p>
+    </div>
+    <div class="meta">Ascend 910 ×1<br>CANN 9.0 / torch_npu 2.10</div>
+  </div>
+
   <p id="error" class="error-banner" role="alert" hidden></p>
 
   <section class="runbar" id="runbar" aria-label="训练批次"></section>
 
-  <section class="kpis" id="kpis" aria-live="polite"></section>
+  <section class="stats" id="kpis" aria-live="polite"></section>
 
   <section class="controls" aria-label="回放控制">
-    <button id="play" class="btn primary" type="button">回放</button>
+    <button id="play" class="btn" type="button">回放</button>
     <label class="speed">速度
       <select id="speed">
         <option value="1">×1</option>
@@ -56,20 +67,20 @@
 
   <section class="grid">
     <figure class="panel span2">
-      <figcaption>损失曲线<span class="hint">train / val，逐 epoch</span></figcaption>
+      <figcaption>损失曲线<span class="hint">train / val · 逐 epoch</span></figcaption>
       <div id="chartLoss" class="chart"></div>
     </figure>
     <figure class="panel">
-      <figcaption>验证集 weighted F1<span class="hint">越高越好</span></figcaption>
+      <figcaption>验证 F1<span class="hint">weighted</span></figcaption>
       <div id="chartF1" class="chart"></div>
     </figure>
 
     <figure class="panel">
-      <figcaption>学习率日程<span class="hint">Eq. 35，对数轴</span></figcaption>
+      <figcaption>学习率<span class="hint">Eq. 35 · 对数轴</span></figcaption>
       <div id="chartLR" class="chart"></div>
     </figure>
     <figure class="panel span2">
-      <figcaption>测试视数 vs 加权 F1<span class="hint">L=25 / 49 训练时未见</span></figcaption>
+      <figcaption>测试视数 vs F1<span class="hint">L=25 / 49 训练时未见</span></figcaption>
       <div id="chartTest" class="chart"></div>
     </figure>
 
@@ -78,18 +89,18 @@
       <pre id="log" class="log" tabindex="0" aria-label="训练日志"></pre>
     </figure>
     <figure class="panel">
-      <figcaption>说明</figcaption>
+      <figcaption>当前批次</figcaption>
       <p class="note" id="note"></p>
-      <p class="note">
-        页面为静态站点：训练进行时由 <code>export_live.py</code> 重写 <code>data.json</code>，
-        前端每 15 秒轮询；没有训练任务时自动切换为历史回放。
+      <p class="note" style="margin-top:12px">
+        静态站点：训练时由 <code>export_live.py</code> 重写 <code>data.json</code>；
+        无训练任务时回放历史。
       </p>
-      <p class="note"><a href="../index.html">返回报告总览</a></p>
+      <p class="note"><a href="../documents/index.html">下载文档与代码 →</a></p>
     </figure>
   </section>
 
   <footer class="foot">
-    数据来源 daninet/runs/*/metrics.json 与 log.txt · 单卡 Ascend910_9382（CANN 9.0 / torch_npu 2.10）· 页面无第三方依赖
+    data · daninet/runs/*/metrics.json · log.txt &nbsp;|&nbsp; no third-party dependencies
   </footer>
 </main>
 

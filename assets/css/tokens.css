@@ -1,21 +1,21 @@
-/* Design tokens. Light = reports, dark = live dashboard. */
+/* Monochrome design tokens: black / white / greys only. */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
   /* type */
   --font-sans: -apple-system, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-  --font-serif: Georgia, "Songti SC", "Noto Serif SC", serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --text-xs: 11.5px;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --text-xs: 11px;
   --text-sm: 13px;
   --text-md: 15px;
   --text-lg: 17px;
-  --text-xl: clamp(20px, 2.4vw, 24px);
-  --text-2xl: clamp(24px, 3.4vw, 32px);
-  --leading: 1.72;
+  --text-xl: clamp(20px, 2.2vw, 24px);
+  --text-2xl: clamp(26px, 3.6vw, 40px);
+  --leading: 1.7;
   --measure: 68ch;
+  --tracking-label: 0.16em;
 
-  /* space (4px scale) */
+  /* space */
   --s1: 4px;
   --s2: 8px;
   --s3: 12px;
@@ -23,67 +23,56 @@
   --s5: 24px;
   --s6: 32px;
   --s7: 48px;
-  --s8: 64px;
+  --s8: 72px;
 
-  /* radii: child <= parent, concentric */
-  --r-lg: 16px;
-  --r-md: 12px;
-  --r-sm: 8px;
-  --r-pill: 999px;
+  /* geometry: sharp, technical */
+  --r-lg: 4px;
+  --r-md: 3px;
+  --r-sm: 2px;
+  --r-pill: 2px;
 
-  /* light surfaces */
-  --bg: #fbfaf9;
-  --bg-soft: #f4f2f0;
-  --panel: #ffffff;
-  --ink: #1c1917;
-  --ink-soft: #44403c;
-  --muted: #6b6560;
-  --line: #e6e3e0;
-  --line-strong: #d6d1cd;
+  /* dark (default) */
+  --bg: #060606;
+  --bg-soft: #0b0b0b;
+  --panel: #0d0d0d;
+  --panel-2: #111111;
+  --ink: #f2f2f2;
+  --ink-soft: #c8c8c8;
+  --muted: #8a8a8a;
+  --faint: #5a5a5a;
+  --line: #1f1f1f;
+  --line-strong: #333333;
 
-  /* accents: one hue family, tinted consistently */
-  --accent: #0f766e;
-  --accent-ink: #0b5d57;
-  --accent-soft: rgba(15, 118, 110, 0.08);
-  --warn: #b45309;
-  --warn-soft: rgba(180, 83, 9, 0.08);
-  --violet: #6d4aff;
+  /* charts: greyscale ramp, still distinguishable */
+  --c1: #f2f2f2;
+  --c2: #a3a3a3;
+  --c3: #6b6b6b;
+  --c4: #454545;
 
-  /* chart palette: distinguishable for deuteranopia */
-  --c1: #0f766e;
-  --c2: #b45309;
-  --c3: #2563eb;
-  --c4: #7c3aed;
-
-  /* elevation & motion */
-  --shadow-1: 0 1px 2px rgba(28, 25, 23, 0.05);
-  --shadow-2: 0 10px 28px rgba(28, 25, 23, 0.08);
-  --dur: 160ms;
+  --grid-line: rgba(255, 255, 255, 0.05);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 20px 48px rgba(0, 0, 0, 0.6);
+  --dur: 140ms;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #0a0e13;
-  --bg-soft: #0d141d;
-  --panel: #111823;
-  --ink: #e6edf3;
-  --ink-soft: #c3ccd8;
-  --muted: #8b98a9;
-  --line: #1e2a38;
-  --line-strong: #2b3b4e;
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #fafafa;
+  --bg-soft: #f2f2f2;
+  --panel: #ffffff;
+  --panel-2: #f7f7f7;
+  --ink: #0a0a0a;
+  --ink-soft: #333333;
+  --muted: #666666;
+  --faint: #8f8f8f;
+  --line: #e2e2e2;
+  --line-strong: #c9c9c9;
 
-  --accent: #34d3ee;
-  --accent-ink: #7fe6f6;
-  --accent-soft: rgba(52, 211, 238, 0.1);
-  --warn: #f5a524;
-  --warn-soft: rgba(245, 165, 36, 0.12);
+  --c1: #0a0a0a;
+  --c2: #5a5a5a;
+  --c3: #8a8a8a;
+  --c4: #b5b5b5;
 
-  --c1: #34d3ee;
-  --c2: #f5a524;
-  --c3: #3ddc97;
-  --c4: #a78bfa;
-
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-2: 0 14px 36px rgba(0, 0, 0, 0.45);
+  --grid-line: rgba(0, 0, 0, 0.06);
+  --shadow: 0 1px 0 rgba(0, 0, 0, 0.03), 0 18px 40px rgba(0, 0, 0, 0.06);
 }

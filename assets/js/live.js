@@ -30,16 +30,16 @@
     const cur = h[h.length - 1] || {};
     const tput = cur.seconds && run.patches_per_epoch ? run.patches_per_epoch / cur.seconds : null;
     const items = [
-      ["epoch", `${cur.epoch ?? 0}<i> / ${run.epochs}</i>`],
+      ["epoch", `${cur.epoch ?? 0}<small> / ${run.epochs}</small>`],
       ["train loss", fmt(cur.train_loss)],
       ["val loss", fmt(cur.val_loss)],
       ["val F1 (weighted)", fmt(cur.val_f1)],
       ["learning rate", cur.lr ? Number(cur.lr).toExponential(0) : "—"],
-      ["吞吐", tput ? `${tput.toFixed(1)}<i> patch/s</i>` : "—"],
+      ["吞吐", tput ? `${tput.toFixed(1)}<small> patch/s</small>` : "—"],
       ["可训练参数", run.params ? run.params.toLocaleString() : "—"],
     ];
     $("kpis").innerHTML = items
-      .map(([k, v]) => `<div class="kpi"><span>${k}</span><b>${v}</b></div>`)
+      .map(([k, v]) => `<div class="stat"><span class="k">${k}</span><span class="v">${v}</span></div>`)
       .join("");
   }
 

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>缺陷分析 · InSAR_affair</title>
+<meta name="description" content="已证实缺陷、所需资源与设备、疑难点。">
+<meta name="theme-color" content="#060606">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/doc.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="nav">
+  <a class="brand" href="../index.html">INSAR<i>/</i>AFFAIR</a>
+  <nav class="links" aria-label="主导航"><a href="../index.html">总览</a><a href="../live/index.html">训练看板</a><a href="../analysis/index.html">数据分析</a><a href="../gaps/index.html" class="active">缺陷分析</a><a href="../documents/index.html">文档</a></nav>
+  <span class="right">2026-10-19</span>
+</header>
+<main class="shell" id="main">
+
+<div class="page-head">
+  <div>
+    <span class="eyebrow">gaps</span>
+    <h1>缺陷分析</h1>
+    <p class="sub">已证实缺陷、所需资源与设备、疑难点。</p>
+  </div>
+  <div class="meta">source · docs/content/gaps.md</div>
+</div>
+<article class="prose"><h1 id="缺陷分析">缺陷分析</h1>
+<p>按「已证实的问题 → 需要的资源 → 还没想清的地方」三层组织，每条都给出证据。</p>
+<h2 id="一-缺陷清单">一、缺陷清单</h2>
+<div class="table-wrap"><table><thead><tr><th>编号</th><th>现象</th><th>影响</th><th>证据</th><th>处理</th></tr></thead><tbody><tr><td class="">D1</td><td class="">论文级规模（250 × 1.48 M patch）单卡需约 214 h</td><td class="">无法在本机对齐论文精度</td><td class="">实测 480 patch/s 端到端</td><td class="">降级为「中等规模 + 多 seed」，报告中明确不等价</td></tr><tr><td class="">D2</td><td class="">50 epoch + batch 32 的分数低于 15 epoch + batch 16</td><td class="">加算力反而变差</td><td class="">L=9：0.6876 vs 0.7021</td><td class="">学习率日程需按总 epoch 重标定</td></tr><tr><td class="">D3</td><td class="">c1（第 1 景后变化）p_D 仅 0.574</td><td class="">拉低加权 F1</td><td class=""><code>runs/a3_amp_b16_e15/metrics.json</code></td><td class="">属于物理下界，暂不作为 bug 修</td></tr><tr><td class="">D4</td><td class="">数据管道 fp32 下只有 332 patch/s，低于设备算力</td><td class="">GPU/NPU 等数据</td><td class=""><code>SPEC-002</code> §2.2</td><td class="">已用 fp16 传输 + prefetch 32 解决</td></tr><tr><td class="">D5</td><td class=""><code>torch.compile(backend="npu")</code> 10 分钟未产出首个 step</td><td class="">图模式不可用</td><td class="">探测日志</td><td class="">暂不启用，列为后续评估</td></tr><tr><td class="">D6</td><td class="">真实数据两例（冰岛 Sentinel-1、TanDEM-X 露天矿）未实现</td><td class="">缺端到端证据</td><td class="">代码包内无数据与推理脚本</td><td class="">需要数据授权后再排期</td></tr></tbody></table></div>
+<h2 id="二-改进所需资源与设备">二、改进所需资源与设备</h2>
+<div class="table-wrap"><table><thead><tr><th>事项</th><th>需要什么</th><th>当前缺口</th><th>优先级</th></tr></thead><tbody><tr><td class="">对齐论文训练规模</td><td class="">8 卡以上 910 或 V100 集群，或接受 200 h 单卡</td><td class="">只有 1 卡可用</td><td class="">中</td></tr><tr><td class="">真实数据验证</td><td class="">Sentinel-1 SLC（2023–2024 冰岛）＋ TanDEM-X 堆栈</td><td class="">无数据、无下载通道</td><td class="">高（决定结论强度）</td></tr><tr><td class="">多 seed 稳定性</td><td class="">单卡 × 5 次 × 6 min</td><td class="">无（成本可接受）</td><td class="">高</td></tr><tr><td class="">图模式加速</td><td class="">CANN 版本与 torch_npu 支持的 compile 后端</td><td class="">当前版本不可用</td><td class="">低</td></tr><tr><td class="">大显存下更大 patch</td><td class="">256×256 输入、batch 32</td><td class="">HBM 64 GB 足够，需改数据生成</td><td class="">低</td></tr></tbody></table></div>
+<h2 id="三-疑难点">三、疑难点</h2>
+<p><strong>Q1：为什么加深网络有效，加长训练无效？</strong></p>
+<p>两种可能：一是 5 blocks 的表达能力不足（欠拟合），二是学习率日程在长训练里失效。证据偏向第一种：10 blocks 在同样 15 epoch 下涨 0.04，而 50 epoch 的 5 blocks 没有任何提升。验证方法：10 blocks × 50 epoch + 重标定日程，若继续提升则确认容量是主因。</p>
+<p><strong>Q2：c1 的低检测率是数据问题还是模型问题？</strong></p>
+<p>两种解释：一是变化发生在第一个时间间隔，可用的相干样本太少，属于信息不足；二是类别不平衡导致模型偏向 c0。验证方法：固定其它类别，单独过采样 c1 训练一轮，若 p_D 明显上升则是后者。</p>
+<p><strong>Q3：fp16 传输会不会掩盖数值问题？</strong></p>
+<p>当前只做了终态指标对比（Δ ≤ 0.0001）。更严格的验证是固定同一批数据，逐步比较每个 epoch 的 loss 轨迹；未做，标记为<strong>未验证</strong>。</p>
+<h2 id="四-当前状态">四、当前状态</h2>
+<ul><li>已实现：设备抽象、AMP、fp16 管道、直播看板、报告站点</li><li>已验证：NPU 与 GPU 同解；AMP 与 fp32 同解；10 blocks 提升</li><li>未实现：真实数据两例、PCD 对比</li><li>未验证：长训练的收敛性、fp16 的逐步轨迹一致性</li></ul></article>
+
+</main>
+<footer>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · 站点无第三方依赖</footer>
+</body>
+</html>

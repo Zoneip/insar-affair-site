@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>组件验证 · Chart.js + anime.js</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/doc.css">
+<style>
+  .poc-legend { display: flex; gap: 18px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 10px; }
+  .poc-legend i { display: inline-block; width: 14px; height: 2px; margin-right: 6px; vertical-align: middle; }
+  .canvas-wrap { position: relative; height: 260px; }
+  .canvas-wrap.tall { height: 320px; }
+  canvas { display: block; width: 100% !important; height: 100% !important; }
+  details { margin-top: 12px; font-size: 12px; color: var(--muted); }
+  summary { cursor: pointer; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  @media (prefers-reduced-motion: reduce) { .anim { opacity: 1 !important; transform: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="nav">
+  <a class="brand" href="../index.html">INSAR<i>/</i>AFFAIR</a>
+  <nav class="links" aria-label="主导航">
+    <a href="../index.html">总览</a>
+    <a href="../live/index.html">训练看板</a>
+    <a href="../analysis/index.html">数据分析</a>
+    <a href="../gaps/index.html">缺陷分析</a>
+    <a href="../documents/index.html">文档</a>
+  </nav>
+  <span class="right">POC · chart.js 4.4.7 + anime.js 3.2.2</span>
+</header>
+
+<main class="shell" id="main">
+  <div class="page-head">
+    <div>
+      <span class="eyebrow">Component proof</span>
+      <h1>静态组件验证</h1>
+      <p class="sub">Chart.js 负责数据图，anime.js 负责入场与回放，布局仍由 CSS 栅格承担。所有库本地托管，无 CDN。</p>
+    </div>
+    <div class="meta">noindex<br>preview only</div>
+  </div>
+
+  <p id="error" class="error-banner" role="alert" hidden></p>
+
+  <section class="stats" id="kpis"></section>
+
+  <section class="grid" style="grid-template-columns:1.6fr 1fr">
+    <figure class="panel anim">
+      <figcaption>损失曲线<span class="hint">chart.js · line</span></figcaption>
+      <div class="canvas-wrap"><canvas id="loss" role="img" aria-label="训练与验证损失曲线"></canvas></div>
+      <div class="poc-legend"><span><i style="background:#f2f2f2"></i>train</span><span><i style="background:#8a8a8a"></i>val</span></div>
+      <details>
+        <summary>表格视图（无障碍/无脚本）</summary>
+        <table class="table" id="loss-table"></table>
+      </details>
+    </figure>
+
+    <figure class="panel anim">
+      <figcaption>测试视数 vs F1<span class="hint">chart.js · bar</span></figcaption>
+      <div class="canvas-wrap tall"><canvas id="tests" role="img" aria-label="测试视数与加权 F1"></canvas></div>
+      <details>
+        <summary>表格视图</summary>
+        <table class="table" id="test-table"></table>
+      </details>
+    </figure>
+  </section>
+
+  <div style="display:flex; gap:12px; margin-top:20px">
+    <button class="btn" id="replay" type="button">重放动效</button>
+    <a class="btn ghost" href="../live/index.html">对比 SVG 版本</a>
+  </div>
+</main>
+
+<footer>preview · 仅用于选型验证，未接入正式导航</footer>
+
+<script src="../assets/vendor/chartjs/chart.umd.js"></script>
+<script src="../assets/vendor/animejs/anime.min.js"></script>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+  const GRID = "rgba(255,255,255,.07)";
+  const MUTED = "#8a8a8a";
+  const INK = "#f2f2f2";
+
+  Chart.defaults.color = MUTED;
+  Chart.defaults.font.family = MONO;
+  Chart.defaults.font.size = 10;
+  Chart.defaults.animation = false;
+
+  let charts = null;
+
+  function scales(yTitle) {
+    return {
+      x: { grid: { color: GRID, drawTicks: false }, border: { color: "#1f1f1f" }, ticks: { color: MUTED, maxRotation: 0 } },
+      y: {
+        grid: { color: GRID, drawTicks: false }, border: { display: false },
+        ticks: { color: MUTED, padding: 8 },
+        title: yTitle ? { display: true, text: yTitle, color: "#5a5a5a", font: { size: 9 } } : undefined,
+      },
+    };
+  }
+
+  function draw(run) {
+    const hist = run.history;
+    const labels = hist.map((h) => h.epoch);
+
+    if (charts) { charts.loss.destroy(); charts.tests.destroy(); }
+
+    charts = {
+      loss: new Chart($("loss"), {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            { label: "train", data: hist.map((h) => h.train_loss), borderColor: INK, backgroundColor: "rgba(242,242,242,.08)", fill: true, borderWidth: 1.5, pointRadius: 0, tension: 0.25 },
+            { label: "val", data: hist.map((h) => h.val_loss), borderColor: MUTED, borderDash: [4, 3], borderWidth: 1.5, pointRadius: 0, tension: 0.25 },
+          ],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, interaction: { mode: "index", intersect: false },
+          plugins: { legend: { display: false }, tooltip: { backgroundColor: "#0d0d0d", borderColor: "#333", borderWidth: 1, titleFont: { family: MONO, size: 11 }, bodyFont: { family: MONO, size: 11 } } },
+          scales: scales(),
+        },
+      }),
+      tests: new Chart($("tests"), {
+        type: "bar",
+        data: {
+          labels: Object.keys(run.tests).map((L) => "L=" + L),
+          datasets: [{ label: "weighted F1", data: Object.values(run.tests).map((t) => t.f1_weighted), backgroundColor: "#c8c8c8", hoverBackgroundColor: INK, borderWidth: 0, barPercentage: 0.62 }],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { backgroundColor: "#0d0d0d", borderColor: "#333", borderWidth: 1 } },
+          scales: { ...scales(), y: { ...scales().y, min: 0.6, max: 0.85 } },
+        },
+      }),
+    };
+
+    // accessible tables
+    $("loss-table").innerHTML =
+      "<thead><tr><th>epoch</th><th class='num'>train</th><th class='num'>val</th></tr></thead><tbody>" +
+      hist.map((h) => `<tr><td>${h.epoch}</td><td class="num">${h.train_loss.toFixed(4)}</td><td class="num">${h.val_loss.toFixed(4)}</td></tr>`).join("") +
+      "</tbody>";
+    $("test-table").innerHTML =
+      "<thead><tr><th>L</th><th class='num'>F1</th></tr></thead><tbody>" +
+      Object.entries(run.tests).map(([L, t]) => `<tr><td>${L}</td><td class="num">${t.f1_weighted.toFixed(4)}</td></tr>`).join("") +
+      "</tbody>";
+  }
+
+  function kpis(run) {
+    const last = run.history[run.history.length - 1];
+    const items = [
+      ["epoch", `${last.epoch}<small> / ${run.epochs}</small>`],
+      ["val f1", last.val_f1.toFixed(4)],
+      ["params", run.params.toLocaleString()],
+      ["time", `${(run.seconds / 60).toFixed(1)}<small> min</small>`],
+    ];
+    $("kpis").innerHTML = items.map(([k, v]) => `<div class="stat anim"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
+  }
+
+  function animate() {
+    // transform-only: content must stay readable if the animation never runs
+    if (REDUCED || !window.anime) return;
+    anime({ targets: ".stat.anim", translateY: [10, 0], duration: 520, delay: anime.stagger(70), easing: "easeOutQuad" });
+    anime({ targets: "figure.panel.anim", translateY: [14, 0], duration: 620, delay: anime.stagger(90, { start: 160 }), easing: "easeOutQuad" });
+  }
+
+  async function boot() {
+    try {
+      const res = await fetch("../live/data.json?ts=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error("data.json " + res.status);
+      const data = await res.json();
+      const run = data.runs[0];
+      kpis(run);
+      draw(run);
+      animate();
+      $("replay").addEventListener("click", () => {
+        if (charts) { charts.loss.reset(); charts.tests.reset(); }
+        draw(run);
+        animate();
+      });
+    } catch (err) {
+      const box = $("error");
+      box.hidden = false;
+      box.textContent = "加载失败：" + err.message;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", boot);
+})();
+</script>
+</body>
+</html>
