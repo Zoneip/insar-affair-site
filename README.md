@@ -37,12 +37,12 @@
 | 训练看板 | `/live/` | 逐 epoch 指标、回放（不自动播放） |
 | 数据分析 | `/analysis/` | 四组对照实验设置与结论 |
 | 可视化 | `/visual/` | 两条并行线的入口 |
-| └ 矩阵分割 | `/visual/segmentation/` | 逐像素热力图、混淆、置信度 |
-| └ 论文复现 | `/visual/reproduction/` | F1–视数曲线、训练过程、吞吐、逐节状态 |
+| └ 块边界分割 | `/visual/segmentation/` | 对角块切分：画廊、难度分解、逐视数指标 |
+| └ 论文复现 | `/visual/reproduction/` | F1–视数、训练过程、吞吐、逐节状态、逐像素分割产物 |
 | 缺陷分析 | `/gaps/` | 缺陷清单、所需资源、疑难点 |
 | 文档 | `/documents/` | 三份说明/报告，可页内阅读或下载 Word |
 
-两个可视化子页各自维护 `data.json`，互不影响：分割页由 `daninet/tools/visual_samples.py` 在 A3 上生成，复现页由 `live/data.json` 在 `build_pages.py` 里派生。
+两个可视化子页数据互不影响：块边界页读 `segmentation/edge.json`（由 `runs/edge_*` 与 `out/edge_segmentation` 派生）；复现页读 `reproduction/data.json`（由 `live/data.json` 派生）与 `reproduction/pixels.json`（由 `daninet/tools/visual_samples.py` 在 A3 生成）。
 
 ## 分层规则
 

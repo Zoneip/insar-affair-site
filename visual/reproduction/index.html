@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>论文复现 · InSAR_affair</title>
-<meta name="description" content="多组实验的 F1 曲线、吞吐与逐节复现状态。">
+<meta name="description" content="多组实验的 F1 曲线、吞吐、逐节状态与逐像素分割产物。">
 <meta name="theme-color" content="#faf8f3">
 <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../assets/vendor/pico/pico.min.css">
@@ -34,11 +34,12 @@
 <div class="repro-chart" id="repro-tput"></div>
 <h2>复现状态 <small>逐项核对论文</small></h2>
 <div id="repro-status"></div>
-
+<h2 class="viz-branch">逐像素分割 <small>DANI-NET 复现产物 · a3_b10_e25 · epoch 25 · 6 个视数 · 64×64 热力图</small></h2><p class="lede">四类地物：青绿 = 稳定、橙 = 突变、石板蓝 = 线性、灰 = 周期。每张图都是 128×128 场景下采样到 64×64 的逐像素预测；红点表示判断错误的像素。</p><div class="viz-legend" id="viz-legend"></div><div class="viz-grid" id="viz-levels"></div><h2>抽样对照 <small>ground truth / prediction / 误差</small></h2><div class="viz-tabs" id="viz-tabs"></div><div class="viz-samples" id="viz-samples"></div><h2>类别混淆 <small>行归一化</small></h2><div class="viz-confusion" id="viz-confusion"></div><h2>类别 × 视数 <small>每格为该类召回率，越深越差</small></h2><div class="viz-recall-grid" id="viz-recall-grid"></div><h2>置信度与错误 <small>只错在高置信处才是问题</small></h2><div class="viz-conf" id="viz-conf"></div>
 </main>
 <footer class="container">
   <small>DANI-NET 复现 · 数据来自 daninet/runs/*/metrics.json · Pico.css（本地托管）</small>
 </footer>
 <script src="../../assets/js/repro.js" defer></script>
+<script src="../../assets/js/visual.js" defer></script>
 </body>
 </html>

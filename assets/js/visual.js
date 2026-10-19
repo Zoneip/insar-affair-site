@@ -273,26 +273,28 @@
     }
   }
 
-  async function boot() {
+  async function bootPixels() {
     const host = $("viz-levels");
     if (!host) return;
     let data;
     try {
-      const res = await fetch("data.json", { cache: "no-store" });
+      const res = await fetch("pixels.json", { cache: "no-store" });
       if (!res.ok) throw new Error(String(res.status));
       data = await res.json();
     } catch (err) {
-      host.innerHTML = `<p class="empty">可视化数据加载失败：${err.message}</p>`;
+      host.innerHTML = `<p class="empty">逐像素数据加载失败：${err.message}</p>`;
       return;
     }
-
     drawLegend($("viz-legend"));
     drawLevels(host, data);
     drawSamples($("viz-samples"), $("viz-tabs"), data);
     drawConfusion($("viz-confusion"), data);
     drawRecallGrid($("viz-recall-grid"), data);
     drawConfidence($("viz-conf"), data);
-    drawEdge();
+  }
+
+  async function boot() {
+    await Promise.all([bootPixels(), drawEdge()]);
   }
 
   if (document.readyState === "loading") {
