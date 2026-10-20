@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19",
+  "generated_at": "2026-10-20",
   "files": [
     {
       "title": "项目 README",
@@ -8,10 +8,10 @@
       "md": "readme.md",
       "size": 8906,
       "sha256": "c62504c6a79c",
-      "updated": "2026-10-19",
+      "updated": "2026-10-20",
       "read": "../read/readme.html",
       "docx": "readme.docx",
-      "docx_size": 17848
+      "docx_size": 17847
     },
     {
       "title": "InSAR 矩阵分割",
@@ -20,10 +20,10 @@
       "md": "segmentation.md",
       "size": 9714,
       "sha256": "6f4a9f8fbeb7",
-      "updated": "2026-10-19",
+      "updated": "2026-10-20",
       "read": "../read/segmentation.html",
       "docx": "segmentation.docx",
-      "docx_size": 18257
+      "docx_size": 18258
     },
     {
       "title": "复现说明",
@@ -32,22 +32,22 @@
       "md": "reproduction.md",
       "size": 15632,
       "sha256": "d3e669b5d300",
-      "updated": "2026-10-19",
+      "updated": "2026-10-20",
       "read": "../read/reproduction.html",
       "docx": "reproduction.docx",
-      "docx_size": 22669
+      "docx_size": 22671
     },
     {
       "title": "数据分析",
       "slug": "analysis",
       "desc": "实验设置、对照结果与三条结论",
       "md": "analysis.md",
-      "size": 2987,
-      "sha256": "616edf239e46",
-      "updated": "2026-10-19",
+      "size": 3610,
+      "sha256": "d27dff8b6676",
+      "updated": "2026-10-20",
       "read": "../read/analysis.html",
       "docx": "analysis.docx",
-      "docx_size": 13590
+      "docx_size": 13990
     },
     {
       "title": "缺陷分析",
@@ -56,10 +56,10 @@
       "md": "gaps.md",
       "size": 3132,
       "sha256": "2ce6dcb19452",
-      "updated": "2026-10-19",
+      "updated": "2026-10-20",
       "read": "../read/gaps.html",
       "docx": "gaps.docx",
-      "docx_size": 13575
+      "docx_size": 13574
     }
   ]
 }
