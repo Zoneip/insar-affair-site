@@ -324,6 +324,21 @@
         <p class="viz-note dim">画廊种子 ${d.gallery.seed}；阈值按尺寸在验证集上校准。</p>`;
     }
 
+    const realHost = $("edge-real");
+    if (realHost && d.real) {
+      const kk = Object.entries(d.real.k || {})
+        .map(([k, v]) => `${k} 切点 ${v}`).join(" · ");
+      realHost.innerHTML = `
+        <figure class="viz-figure"><img src="../../assets/img/edge/real111.png" alt="111 real data">
+          <figcaption>真实数据 8 例<small>左：|γ| 矩阵；右：DP 切分</small></figcaption></figure>
+        <div class="viz-note">
+          <p><strong>${d.real.n.toLocaleString()}</strong> 个矩阵 · ${d.real.groups} 个来源组 · N=${d.real.size}（真实尺寸，训练未见）</p>
+          <p>DP 自动选 K 分布：${kk}</p>
+          <p>视数估计中位数 <strong>${d.real.looks_median}</strong>（q10 ${d.real.looks_q10} / q90 ${d.real.looks_q90}）</p>
+          <p class="dim">该批数据<strong>无标签</strong>，以上仅是无监督一致性与合理性检查，不能当作精度结论；CNN 在 N=10 上的 0.7283 来自合成测试集。</p>
+        </div>`;
+    }
+
     if (d.dp) {
       const sets = [
         ["N=14/17（训练内）", d.dp.indist],
