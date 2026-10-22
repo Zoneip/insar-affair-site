@@ -23,7 +23,7 @@
   <p class="eyebrow">document · reproduction</p>
   <h1>复现说明</h1>
   <p class="sub">DANI-NET 复现的完整说明：公式对照、复现发现、结果表</p>
-  <p class="meta">updated 2026-10-20</p>
+  <p class="meta">updated 2026-10-23</p>
 </header>
 <div class="reader-actions">
   <a role="button" class="secondary outline" href="../index.html">← 返回文档列表</a>
@@ -121,7 +121,7 @@
 <p>因此本文的训练结果用于<strong>验证流程正确性与定性规律</strong>（类别可分性、L 泛化趋势、 混淆矩阵结构），<strong>不用于复现论文的具体精度数值</strong>。修复后的 augmented 运行使用 change-focused 采样来覆盖论文强调的 class 1/2 变化样本；原始论文的完整 “一半基线 + 一半变化增强”规模仍需按论文算力另行运行。</p>
 <hr>
 <h2 id="6-修复后全量运行结果">6. 修复后全量运行结果</h2>
-<p>最终全量可运行训练位于 <code>runs/final_augmented_v2/</code>，使用最终修复后的代码和 augmented 配置：15 epoch、每 epoch 10,000 个 patch、batch 16、训练视数 <code>[9,16,36,121]</code>，测试视数 <code>[9,16,25,36,49,121]</code>。实际训练耗时约 28.1 分钟，最佳 epoch 为 15。完整汇总见 <code>out/summary.md</code>。</p>
+<p>最终全量可运行训练位于 <code>runs/final_augmented_v2/</code>，使用最终修复后的代码和 augmented 配置：15 epoch、每 epoch 10,000 个 patch、batch 16、训练视数 <code>[9,16,36,121]</code>，测试视数 <code>[9,16,25,36,49,121]</code>。实际训练耗时约 28.1 分钟，最佳 epoch 为 15。现行最好结果（<code>a3_b10_p200k_e60</code>，L=121 F1_w 0.8241）见 <code>AGENTS.md</code> §2.1；<code>out/summary.md</code> 已归档到 <code>achieve/assets/2026-10-20/</code>。</p>
 <div class="table-wrap"><table><thead><tr><th>测试 L</th><th>weighted F1</th><th>ACC</th><th>p_D(c0)</th><th>p_D(c1)</th><th>p_D(c2)</th><th>p_D(c3)</th></tr></thead><tbody><tr><td class="num">9</td><td class="num">0.702</td><td class="num">0.704</td><td class="num">0.817</td><td class="num">0.566</td><td class="num">0.603</td><td class="num">0.663</td></tr><tr><td class="num">16</td><td class="num">0.718</td><td class="num">0.721</td><td class="num">0.842</td><td class="num">0.566</td><td class="num">0.616</td><td class="num">0.678</td></tr><tr><td class="">25*</td><td class="num">0.729</td><td class="num">0.732</td><td class="num">0.853</td><td class="num">0.572</td><td class="num">0.630</td><td class="num">0.693</td></tr><tr><td class="num">36</td><td class="num">0.739</td><td class="num">0.742</td><td class="num">0.863</td><td class="num">0.575</td><td class="num">0.642</td><td class="num">0.705</td></tr><tr><td class="">49*</td><td class="num">0.747</td><td class="num">0.750</td><td class="num">0.871</td><td class="num">0.576</td><td class="num">0.654</td><td class="num">0.718</td></tr><tr><td class="num">121</td><td class="num">0.769</td><td class="num">0.772</td><td class="num">0.886</td><td class="num">0.574</td><td class="num">0.696</td><td class="num">0.760</td></tr></tbody></table></div>
 <p><code>*</code> L=25、49 未参与训练。验证 weighted F1 从第 1 epoch 的 0.605 提升到第 15 epoch 的 0.723，验证 ACC 从 0.612 提升到 0.726。</p>
 <p>修复后的生成器现在具有以下可验证性质：</p>

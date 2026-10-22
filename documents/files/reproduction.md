@@ -222,7 +222,7 @@ change-focused 采样来覆盖论文强调的 class 1/2 变化样本；原始论
 
 ## 6. 修复后全量运行结果
 
-最终全量可运行训练位于 `runs/final_augmented_v2/`，使用最终修复后的代码和 augmented 配置：15 epoch、每 epoch 10,000 个 patch、batch 16、训练视数 `[9,16,36,121]`，测试视数 `[9,16,25,36,49,121]`。实际训练耗时约 28.1 分钟，最佳 epoch 为 15。完整汇总见 `out/summary.md`。
+最终全量可运行训练位于 `runs/final_augmented_v2/`，使用最终修复后的代码和 augmented 配置：15 epoch、每 epoch 10,000 个 patch、batch 16、训练视数 `[9,16,36,121]`，测试视数 `[9,16,25,36,49,121]`。实际训练耗时约 28.1 分钟，最佳 epoch 为 15。现行最好结果（`a3_b10_p200k_e60`，L=121 F1_w 0.8241）见 `AGENTS.md` §2.1；`out/summary.md` 已归档到 `achieve/assets/2026-10-20/`。
 
 | 测试 L | weighted F1 | ACC | p_D(c0) | p_D(c1) | p_D(c2) | p_D(c3) |
 |---:|---:|---:|---:|---:|---:|---:|

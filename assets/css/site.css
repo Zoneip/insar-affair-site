@@ -608,3 +608,32 @@ article.prose{background:none;border:0;padding:0;box-shadow:none;margin:0}
 .viz-edge-bars .repro-bar .viz-bar { height: 8px; }
 .viz-edge-bars .repro-bar .viz-bar i { background: var(--c1); }
 .viz-edge-bars .repro-bar:nth-child(odd) .viz-bar i { background: var(--c2); }
+
+/* wide figure for the 50-panel gallery */
+.viz-wide-figure { margin: 1rem 0 2.2rem; }
+.viz-wide-figure img {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+}
+.viz-wide-figure figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.viz-wide-figure figcaption small { display: block; text-transform: none; letter-spacing: 0; }
+
+.viz-scroll { position: relative; }
+.viz-figure .viz-scroll, .viz-wide-figure .viz-scroll {
+  max-height: 660px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+}
+.viz-scroll img { border: 0 !important; border-radius: 0 !important; }

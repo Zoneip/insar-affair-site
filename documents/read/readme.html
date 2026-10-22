@@ -23,7 +23,7 @@
   <p class="eyebrow">document · readme</p>
   <h1>项目 README</h1>
   <p class="sub">项目定位、两条产品线、环境与目录速查</p>
-  <p class="meta">updated 2026-10-20</p>
+  <p class="meta">updated 2026-10-23</p>
 </header>
 <div class="reader-actions">
   <a role="button" class="secondary outline" href="../index.html">← 返回文档列表</a>
@@ -41,15 +41,15 @@
 <p><strong>当前规模</strong>（与论文差距）：</p>
 <div class="table-wrap"><table><thead><tr><th>项</th><th>论文</th><th>本项目（P2 深跑）</th></tr></thead><tbody><tr><td class="">训练数据</td><td class="">全因子枚举，每 L 1,855,740 片</td><td class="">在线随机抽样（分布等价、可无限生成）</td></tr><tr><td class="">呈现次数</td><td class="">250 ep × 1.48 M ≈ 3.71 亿</td><td class="">60 ep × 200 k = 1,200 万（约 <strong>3.2%</strong>）</td></tr><tr><td class="">硬件</td><td class="">V100</td><td class="">Ascend 910（单卡 chip 0）</td></tr></tbody></table></div>
 <p><strong>缩放结论</strong>（weighted F1，AMP fp16，batch 16）：</p>
-<div class="table-wrap"><table><thead><tr><th>run</th><th>配置</th><th>L=9</th><th>L=25</th><th>L=121</th><th>耗时</th></tr></thead><tbody><tr><td class=""><code>a3_amp_b16_e15</code></td><td class="">5 blk × 15ep × 10k</td><td class="num">0.7021</td><td class="num">0.7291</td><td class="num">0.7689</td><td class="">5.8 min</td></tr><tr><td class=""><code>a3_s5_p50k_e25</code></td><td class="">5 blk × 25ep × 50k</td><td class="num">0.7289</td><td class="num">0.7496</td><td class="num">0.7887</td><td class="">48.2 min</td></tr><tr><td class=""><code>a3_b10_e25</code></td><td class="">10 blk × 25ep × 10k</td><td class="num">0.7459</td><td class="num">0.7628</td><td class="num">0.7942</td><td class="">14.6 min</td></tr><tr><td class=""><code>a3_b10_p200k_e60</code></td><td class="">10 blk × 60ep × 200k</td><td class="">进行中</td><td class="num">—</td><td class="num">—</td><td class="">预计 ~10 h</td></tr></tbody></table></div>
-<p>同预算下<strong>加深度优于加数据</strong>（5→10 blk +0.041 @L=9，数据 ×5 仅 +0.021 @L=25）。</p>
+<div class="table-wrap"><table><thead><tr><th>run</th><th>配置</th><th>L=9</th><th>L=25</th><th>L=121</th><th>耗时</th></tr></thead><tbody><tr><td class=""><code>a3_amp_b16_e15</code></td><td class="">5 blk × 15ep × 10k</td><td class="num">0.7021</td><td class="num">0.7291</td><td class="num">0.7689</td><td class="">5.8 min</td></tr><tr><td class=""><code>a3_s5_p50k_e25</code></td><td class="">5 blk × 25ep × 50k</td><td class="num">0.7289</td><td class="num">0.7496</td><td class="num">0.7887</td><td class="">48.2 min</td></tr><tr><td class=""><code>a3_b10_e25</code></td><td class="">10 blk × 25ep × 10k</td><td class="num">0.7459</td><td class="num">0.7628</td><td class="num">0.7942</td><td class="">14.6 min</td></tr><tr><td class=""><strong><code>a3_b10_p200k_e60</code></strong></td><td class="">10 blk × 60ep × 200k</td><td class=""><strong>0.7815</strong></td><td class=""><strong>0.7931</strong></td><td class=""><strong>0.8241</strong></td><td class="">425 min</td></tr></tbody></table></div>
+<p>同预算下<strong>加深度优于加数据</strong>（5→10 blk +0.041 @L=9，数据 ×5 仅 +0.021 @L=25）。P2 后已<strong>饱和</strong>：ep51 第二次降 LR 仅 +0.0002，ep55 达峰，继续加 epoch 无收益。</p>
 <hr>
 <h2 id="2-产品线-b-insar-块矩阵分割">2. 产品线 B：InSAR 块矩阵分割</h2>
 <p><strong>任务</strong>：从 N×N 非负相干矩阵 <code>|γ| ∈ [0,1]</code> 预测 <strong>N−1</strong> 个连续对角块边界（二维块检测 → 一维多标签边界检测）。合成口径与真实 InSAR 相干矩阵一致。</p>
 <p><strong>主模型</strong> <code>daninet/runs/edge_final_single</code>：DANI-NET 骨干 + 边界头，seed 20261019，60 epoch × 32768 合成矩阵，早停 epoch 24，11.3 min。</p>
 <div class="table-wrap"><table><thead><tr><th>指标（n=3968）</th><th>值</th></tr></thead><tbody><tr><td class="">Exact Accuracy</td><td class=""><strong>0.6872</strong></td></tr><tr><td class="">Boundary F1 / Rect F1</td><td class="">0.8391 / 0.8133</td></tr><tr><td class="">边界数 MAE</td><td class="">0.320（过分割 9.3% / 欠分割 15.9%）</td></tr><tr><td class="">逐 L Exact</td><td class="">0.312 → 0.548 → 0.665 → 0.775 → 0.860 → <strong>0.977</strong>（L=9…121）</td></tr><tr><td class="">未见尺寸 25</td><td class="">0.592（过分割 35.4%，阈值需重校准）</td></tr><tr><td class="">推理（17×17）</td><td class="">单模型 0.12 ms</td></tr></tbody></table></div>
 <p>难点在<strong>窄块</strong>（块宽 2 → 0.646，块宽 8 → 0.805）与<strong>多边界</strong>（4 个边界 → 0.487）。完整画廊与分解见 <code>/visual/segmentation/</code>，方法整理见文档区《InSAR 矩阵分割》。</p>
-<p><strong>缺口</strong>：真实带标注的相干矩阵数据（<code>.mat</code>）尚未入库，当前全部结论基于合成数据。</p>
+<p><strong>缺口</strong>：真实带标注的相干矩阵数据（<code>.mat</code>）尚未入库，当前全部结论基于合成数据。真实数据到位后先过 <strong>数据门禁</strong>（<code>daninet/edge/audit.py</code>，规范见 <code>specs/SPEC-003</code>）再谈训练——合成集的块边界仅部分可辨识，不能把合成指标当真实性能。</p>
 <hr>
 <h2 id="3-硬件与环境">3. 硬件与环境</h2>
 <div class="table-wrap"><table><thead><tr><th>用途</th><th>环境</th></tr></thead><tbody><tr><td class="">训练</td><td class="">华为云 Ascend <strong>910</strong>，CANN <strong>9.0</strong>，torch <strong>2.10</strong> + torch_npu <strong>2.10</strong>，Python 3.11.15</td></tr><tr><td class="">本机</td><td class="">文档、站点构建、数据核对（无 GPU、无 numpy/torch，<strong>不训练</strong>）</td></tr></tbody></table></div>

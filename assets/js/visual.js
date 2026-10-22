@@ -297,8 +297,87 @@
     drawConfidence($("viz-conf"), data);
   }
 
+  async function drawEdgeProgress() {
+    const dpHost = $("edge-dp");
+    if (!dpHost) return;
+    let d;
+    try {
+      const res = await fetch("progress.json", { cache: "no-store" });
+      if (!res.ok) throw new Error(String(res.status));
+      d = await res.json();
+    } catch (err) {
+      dpHost.innerHTML = `<p class="empty">进度数据加载失败：${err.message}</p>`;
+      return;
+    }
+
+    const pct = (v) => (v === null || v === undefined ? "—" : (v * 100).toFixed(1));
+    const gal = $("edge-gallery-table");
+    if (gal && d.gallery) {
+      const rows = d.gallery.models.map((m) => `
+        <tr><td>${m.id}</td>
+        <td class="num">${pct(m.exact)}</td>
+        <td class="num">${pct((m.thresholds || {})["14"])}</td>
+        <td class="num">${pct((m.thresholds || {})["17"])}</td></tr>`).join("");
+      gal.innerHTML = `<table class="viz-cm">
+        <thead><tr><th>模型</th><th>Exact（${d.gallery.count} 面板）</th><th>阈值 N=14</th><th>阈值 N=17</th></tr></thead>
+        <tbody>${rows}</tbody></table>
+        <p class="viz-note dim">画廊种子 ${d.gallery.seed}；阈值按尺寸在验证集上校准。</p>`;
+    }
+
+    if (d.dp) {
+      const sets = [
+        ["N=14/17（训练内）", d.dp.indist],
+        ["N=10/25（未见尺寸）", d.dp.ood],
+      ];
+      const rows = sets.map(([label, s]) => {
+        const dp = s.dp || {}, cnn = s.cnn || {};
+        return `<tr><td rowspan="2">${label}</td><td>DP</td>
+            <td class="num">${pct(dp.exact_accuracy)}</td><td class="num">${pct(dp.boundary_f1)}</td>
+            <td class="num">${pct(dp.rect_f1)}</td><td class="num">${(dp.mean_absolute_count_error || 0).toFixed(2)}</td></tr>
+          <tr><td><strong>CNN</strong></td>
+            <td class="num"><strong>${pct(cnn.exact_accuracy)}</strong></td>
+            <td class="num"><strong>${pct(cnn.boundary_f1)}</strong></td>
+            <td class="num"><strong>${pct(cnn.rect_f1)}</strong></td>
+            <td class="num"><strong>${(cnn.mean_absolute_count_error || 0).toFixed(2)}</strong></td></tr>`;
+      }).join("");
+      const looks = Object.entries((d.dp.indist && d.dp.indist.by_looks) || {});
+      const bars = looks.map(([L, v]) => `
+        <div class="repro-bar">
+          <span class="repro-bar-label">L=${L}</span>
+          <span class="viz-bar"><i style="width:${(v.cnn || 0) * 100}%"></i></span>
+          <span class="viz-bar"><i style="width:${(v.dp || 0) * 100}%;background:${"var(--c2)"}"></i></span>
+          <span class="repro-bar-value">${pct(v.cnn)} / ${pct(v.dp)}</span>
+        </div>`).join("");
+      dpHost.innerHTML = `<table class="viz-cm">
+        <thead><tr><th>测试集</th><th>方法</th><th>Exact</th><th>Boundary F1</th><th>Rect F1</th><th>MAE</th></tr></thead>
+        <tbody>${rows}</tbody></table>
+        <p class="viz-note">训练内 12/12 格、真实尺寸 N=10 6/6 格 CNN 全胜；N=25 两者持平但 CNN 的计数 MAE 更大。
+        逐 L（上=CNN，下=DP，训练内）：</p>
+        <div class="viz-edge-bars">${bars}</div>
+        <p class="viz-note dim">结论：CNN 优于 DP，DP 保留为无监督兜底与交叉验证；瓶颈在「边界数」而非切点定位。</p>`;
+    }
+
+    const auditHost = $("edge-audit");
+    if (auditHost && d.audit) {
+      const card = (title, body) => `<article class="viz-card"><header><strong>${title}</strong></header>
+        <div class="viz-note">${body}</div></article>`;
+      const i1 = d.audit.iter1 || {}, i2 = d.audit.iter2 || {}, i3 = d.audit.iter3 || {};
+      auditHost.innerHTML = `<div class="viz-grid">
+        ${card("迭代 1 · 合成参考卡", `等级 <strong>${i1.grade || "—"}</strong>（${i1.n || "—"} 个矩阵）<br>
+          近对角带 Exact 0.492 / AUC 0.915，全矩阵仅 0.033 / 0.615`)}
+        ${card("迭代 2 · 注入负测试", `9 类缺陷检出 <strong>${(i2.rows || []).filter((r) => r.detected === "YES").length}/${(i2.rows || []).length}</strong><br>
+          通过率 ${i2.pass_rate === undefined ? "—" : (i2.pass_rate * 100).toFixed(1) + "%"}`)}
+        ${card("迭代 3 · 仿真真实集", `等级 <strong>${i3.grade || "—"}</strong>（${i3.n || "—"} 个矩阵）<br>
+          ${(i3.hard_failures || []).join("；") || "无硬失败"}`)}
+      </div>
+      <p class="viz-note dim">三轮结论：模矩阵不保证 PSD（合成集自身 26% 违例），不能作 |γ| 硬门禁；
+        块信息只在近对角带；反转比例 0.37，L̂ 可由跨块均值反演到 ±1 档；注入负测试 9/9 检出，并能定位整组标注口径漂移。
+        <strong>真实数据尚未跑门禁，任何合成→真实的性能断言都不可用。</strong></p>`;
+    }
+  }
+
   async function boot() {
-    await Promise.all([bootPixels(), drawEdge()]);
+    await Promise.all([bootPixels(), drawEdge(), drawEdgeProgress()]);
   }
 
   if (document.readyState === "loading") {

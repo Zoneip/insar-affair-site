@@ -1,41 +1,41 @@
 {
-  "generated_at": "2026-10-20",
+  "generated_at": "2026-10-23",
   "files": [
     {
       "title": "项目 README",
       "slug": "readme",
       "desc": "项目定位、两条产品线、环境与目录速查",
       "md": "readme.md",
-      "size": 8906,
-      "sha256": "c62504c6a79c",
-      "updated": "2026-10-20",
+      "size": 9220,
+      "sha256": "b24f37396660",
+      "updated": "2026-10-23",
       "read": "../read/readme.html",
       "docx": "readme.docx",
-      "docx_size": 17847
+      "docx_size": 18063
     },
     {
       "title": "InSAR 矩阵分割",
       "slug": "segmentation",
       "desc": "SVM 历史基线、CNN 当前主线与 daninet 方案占位；置顶维护",
       "md": "segmentation.md",
-      "size": 9714,
-      "sha256": "6f4a9f8fbeb7",
-      "updated": "2026-10-20",
+      "size": 13056,
+      "sha256": "1a0839ccf44d",
+      "updated": "2026-10-23",
       "read": "../read/segmentation.html",
       "docx": "segmentation.docx",
-      "docx_size": 18258
+      "docx_size": 20564
     },
     {
       "title": "复现说明",
       "slug": "reproduction",
       "desc": "DANI-NET 复现的完整说明：公式对照、复现发现、结果表",
       "md": "reproduction.md",
-      "size": 15632,
-      "sha256": "d3e669b5d300",
-      "updated": "2026-10-20",
+      "size": 15744,
+      "sha256": "4a26909af1eb",
+      "updated": "2026-10-23",
       "read": "../read/reproduction.html",
       "docx": "reproduction.docx",
-      "docx_size": 22671
+      "docx_size": 22773
     },
     {
       "title": "数据分析",
@@ -44,10 +44,10 @@
       "md": "analysis.md",
       "size": 3610,
       "sha256": "d27dff8b6676",
-      "updated": "2026-10-20",
+      "updated": "2026-10-23",
       "read": "../read/analysis.html",
       "docx": "analysis.docx",
-      "docx_size": 13990
+      "docx_size": 13994
     },
     {
       "title": "缺陷分析",
@@ -56,10 +56,10 @@
       "md": "gaps.md",
       "size": 3132,
       "sha256": "2ce6dcb19452",
-      "updated": "2026-10-20",
+      "updated": "2026-10-23",
       "read": "../read/gaps.html",
       "docx": "gaps.docx",
-      "docx_size": 13574
+      "docx_size": 13577
     }
   ]
 }
