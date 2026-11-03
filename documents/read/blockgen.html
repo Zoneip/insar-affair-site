@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生成式数据集 · 全尺寸边界模型 · InSAR_affair</title>
+<meta name="description" content="物理生成数据集训练的全卷积边界模型：10×10 到 256×256 全尺寸结果与复现说明">
+<meta name="theme-color" content="#faf8f3">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="../../index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="../../index.html">总览</a></li><li><a href="../../live/index.html">训练看板</a></li><li><a href="../../analysis/index.html">数据分析</a></li><li><a href="../../visual/index.html">可视化</a></li><li><a href="../../gaps/index.html">缺陷分析</a></li><li><a href="../../documents/index.html" aria-current="page">文档</a></li></ul>
+  </nav>
+</header>
+<main class="container" id="main">
+<header class="page-head">
+  <p class="eyebrow">Doc · Synthetic-to-Scale</p>
+  <h1>生成式数据集 · 全尺寸边界模型</h1>
+  <p class="sub">源文件 docs/content/blockgen.md</p>
+  <p class="meta">source · docs/content/blockgen.md</p>
+</header>
+<article class="prose"><h1 id="生成式数据集-全尺寸块边界模型">生成式数据集 · 全尺寸块边界模型</h1>
+<p>用<strong>物理正演生成的相干矩阵</strong>训练一个尺寸无关的全卷积检测器，目标是在 <code>N = 10 … 256</code> 的整个区间都能稳定找出对角块边界。本文档记录数据编排、训练配置、结果与调试结论。</p>
+<blockquote><p>代码与权重：<code>workspace/block_coherence/</code>（<code>src/</code>、<code>runs/fast_v1/best.pt</code>）。站点页面：<code>docs/visual/blockgen/</code>。</p></blockquote>
+<hr>
+<h2 id="一-问题与数据形态">一、问题与数据形态</h2>
+<p>输入是一个 <code>N×N</code> 非负相干幅度矩阵 <code>|Γ̂|</code>：对称、对角为 1、取值 <code>[0,1]</code>。它来自同一像元 <code>N</code> 次重复轨道采集、<code>L</code> 视估计，<strong>只保留幅度、丢弃相位</strong>。</p>
+<p>采集序列被变化事件切成 <code>K</code> 个连续块，于是矩阵呈现对角块结构：</p>
+<ul><li>同块内：<code>γ(d) = (γ0−γ∞)·exp(−Δt/τ) + γ∞</code>，再与公共分量混合；</li><li>跨块：残余相干 <code>ε</code>。</li></ul>
+<p>111 实测（13,145 个 N=10 矩阵）给出标定值：<code>ε=0.337</code>、<code>γ0=0.672</code>、<code>γ∞=0</code>（与 ε 简并）、<code>τ≈9.6</code> 个重访周期、<code>L</code> 中位 24、切点数 0/1/2/3 占比 49.8/46.8/3.4/0.008 %。</p>
+<hr>
+<h2 id="二-数据集编排">二、数据集编排</h2>
+<p>不落盘，<strong>在线批量生成</strong>：每个样本由 <code>(seed, epoch, index, size)</code> 唯一确定，因此训练每轮都能拿到新样本，而验证集固定可复现。</p>
+<div class="table-wrap"><table><thead><tr><th>项</th><th>取值</th></tr></thead><tbody><tr><td class="">尺寸</td><td class="">10, 16, 24, 32, 48, 64, 96, 128, 192, 256</td></tr><tr><td class="">视数</td><td class="">对数正态（中位 24.1、σ 0.673），离散到 <code>{9,12,16,20,24,30,38,48,65,96}</code> 以便整批做 Cholesky</td></tr><tr><td class="">切点先验</td><td class="">111 的经验分布（归一化时间），最小块宽 2</td></tr><tr><td class="">噪声配方</td><td class=""><code>clean111</code> 50% / <code>pairwise</code> 25%（N≤96）/ <code>mild</code> 15% / <code>hard</code> 10%</td></tr></tbody></table></div>
+<p><code>pairwise</code> 是“逐对独立估计”的域，用来对齐 111 的 PSD 指纹（实测 43.8% PSD，公共估计几乎 100%）；<code>hard</code> 是刻意超出真实范围的压力测试，只用于测量退化。</p>
+<hr>
+<h2 id="三-训练配置">三、训练配置</h2>
+<div class="table-wrap"><table><thead><tr><th>项</th><th>值</th></tr></thead><tbody><tr><td class="">模型</td><td class=""><code>DANIEdgeNet</code>（5 通道特征，全卷积、无池化，参数 1.20 M）</td></tr><tr><td class="">损失</td><td class="">Focal + Dice + 非对称计数（2:1）+ subset + 侧头深监督</td></tr><tr><td class="">优化</td><td class="">AdamW，lr 5e-4 余弦退火到 2.5e-5，wd 1e-4</td></tr><tr><td class="">每 epoch 步数</td><td class="">按尺寸分配（10→60 步 × B64，256→18 步 × B8），使每个尺寸的<strong>墙钟时间</strong>相近</td></tr><tr><td class="">硬件</td><td class="">单卡 Ascend 910（npu:0），60 epoch，52.3 分钟</td></tr></tbody></table></div>
+<hr>
+<h2 id="四-结果">四、结果</h2>
+<p>测试集每尺寸 600 个新矩阵，阈值在独立验证集（400）上按尺寸校准：</p>
+<div class="table-wrap"><table><thead><tr><th>N</th><th>10</th><th>16</th><th>24</th><th>32</th><th>48</th><th>64</th><th>96</th><th>128</th><th>192</th><th>256</th></tr></thead><tbody><tr><td class="">Exact</td><td class="num">0.953</td><td class="num">0.925</td><td class="num">0.942</td><td class="num">0.950</td><td class="num">0.942</td><td class="num">0.953</td><td class="num">0.948</td><td class="num">0.952</td><td class="num">0.942</td><td class="num">0.948</td></tr><tr><td class="">Rect F1</td><td class="num">0.985</td><td class="num">0.981</td><td class="num">0.988</td><td class="num">0.991</td><td class="num">0.990</td><td class="num">0.993</td><td class="num">0.993</td><td class="num">0.994</td><td class="num">0.994</td><td class="num">0.993</td></tr><tr><td class="">计数 MAE</td><td class="num">0.05</td><td class="num">0.08</td><td class="num">0.06</td><td class="num">0.05</td><td class="num">0.06</td><td class="num">0.04</td><td class="num">0.06</td><td class="num">0.05</td><td class="num">0.07</td><td class="num">0.06</td></tr></tbody></table></div>
+<p><strong>均值 0.9455，极差 0.028</strong>，全区间无断崖。与无学习基线（近对角带统计量 + 阈值）相比，增益从 +0.065（N=10）到 +0.277（N=64）。</p>
+<hr>
+<h2 id="五-鲁棒性">五、鲁棒性</h2>
+<div class="table-wrap"><table><thead><tr><th>配方</th><th>10</th><th>24</th><th>64</th><th>96</th><th>192</th><th>256</th></tr></thead><tbody><tr><td class="">clean111</td><td class="num">0.95</td><td class="num">0.95</td><td class="num">0.94</td><td class="num">0.88</td><td class="num">0.88</td><td class="num">0.90</td></tr><tr><td class="">pairwise</td><td class="num">0.95</td><td class="num">0.96</td><td class="num">0.93</td><td class="num">0.97</td><td class="num">0.88</td><td class="num">0.90</td></tr><tr><td class="">mild</td><td class="num">0.96</td><td class="num">0.93</td><td class="num">0.93</td><td class="num">0.89</td><td class="num">0.88</td><td class="num">0.81</td></tr><tr><td class="">hard</td><td class="num">0.51</td><td class="num">0.34</td><td class="num">0.11</td><td class="num">0.03</td><td class="num">0.00</td><td class="num">0.00</td></tr></tbody></table></div>
+<p>真实域（clean / pairwise / mild）稳定在 <strong>0.81–0.97</strong>。<code>hard</code> 的 0.5 px 配准是真实 TOPS 精度（0.001–0.01 px）的 50 倍，崩掉属域外行为，不应作为部署指标。</p>
+<p>视数敏感性：<code>L≥16</code> 时 0.92–1.00；<strong><code>L=9</code> 是真难点</strong>，N=256 时仅 0.26——候选变多、Exact 要求全对，误差按候选数指数放大。</p>
+<hr>
+<h2 id="六-调试记录">六、调试记录</h2>
+<ol><li><strong>阈值校准是决定性的</strong>：同一权重，N=10 在 0.5 阈值下 0.782，校准到 0.30 后 0.955。</li><li><strong>小矩阵生成必须 <code>OMP_NUM_THREADS=1</code></strong>，否则 640 线程互抢，生成速度掉一个量级。</li><li><strong>DataLoader 多 worker 在 NPU 上下文 fork 后会挂死</strong>；改为单进程在线批量生成。</li><li><strong>stdout 重定向到文件是块缓冲</strong>，进度必须看 <code>log.jsonl</code>（每 epoch flush）。</li><li>批量 Cholesky + complex64 把 N=128 的生成从 40.7 ms/样本降到 14.5 ms/样本。</li></ol>
+<hr>
+<h2 id="七-复现">七、复现</h2>
+<pre class="code"><code>export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
+cd /root/insar_affair/blockcoh
+python src/train_fast.py --epochs 60 --device npu --out runs/fast_v1
+python src/eval_fast.py   --ckpt runs/fast_v1/best.pt --out figs/final
+python src/robust_eval.py --ckpt runs/fast_v1/best.pt --eval-json figs/final/eval.json</code></pre>
+<hr>
+<h2 id="八-局限">八、局限</h2>
+<ol><li>全部指标在<strong>合成分布</strong>上，未在真实 111 上验证（无标签）；</li><li><code>L=9</code> 段偏弱，若部署场景视数低需专项处理；</li><li><code>pairwise</code> 与 <code>common</code> 两域的 PSD 统计仍不完全一致；</li><li><code>hard</code> 域外不工作，需在数据卡里显式标注适用范围。</li></ol></article>
+</main>
+<footer class="container">
+  <small>DANI-NET 复现 · 数据来自 workspace/block_coherence · Pico.css（本地托管）</small>
+</footer>
+</body>
+</html>

@@ -1,0 +1,174 @@
+/* Lab sheet: page-scoped design for docs/visual/blockgen/.
+   Direction: "measurement record" — warm paper, hairline rules, serif display
+   numerals, mono labels, data tables tinted by value. Scoped under .lab so no
+   other page is touched. */
+
+.lab {
+  --display: Georgia, "Songti SC", "Noto Serif SC", "Times New Roman", serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --hair: 1px solid var(--line);
+  --hair-strong: 1px solid var(--line-strong);
+}
+
+/* ---------- hero ---------- */
+.lab-hero { padding: 2.6rem 0 1.4rem; border-bottom: var(--hair-strong); }
+.lab-hero .eyebrow {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent); margin: 0 0 .9rem;
+}
+.lab-hero h1 {
+  font-family: var(--display); font-weight: 500;
+  font-size: clamp(2.1rem, 5vw, 3.5rem); line-height: 1.04;
+  letter-spacing: -0.022em; margin: 0 0 .7rem; color: var(--ink);
+}
+.lab-hero .lede {
+  max-width: 46rem; font-size: 1.06rem; line-height: 1.75;
+  color: var(--ink-soft); margin: 0;
+}
+.lab-hero .runline {
+  display: flex; flex-wrap: wrap; gap: .55rem 1.1rem; margin-top: 1.2rem;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted);
+}
+.lab-hero .runline span::before { content: "·"; margin-right: .55rem; color: var(--line-strong); }
+.lab-hero .runline span:first-child::before { content: none; }
+
+/* ---------- KPI strip ---------- */
+.lab-kpis {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-bottom: var(--hair-strong); margin: 0;
+}
+.lab-kpi { padding: 1.15rem 1.1rem 1.2rem; border-left: var(--hair); }
+.lab-kpi:first-child { border-left: 0; padding-left: 0; }
+.lab-kpi .k {
+  display: block; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+  margin-bottom: .45rem;
+}
+.lab-kpi .v {
+  display: block; font-family: var(--display); font-weight: 500;
+  font-size: clamp(1.45rem, 2.6vw, 2.05rem); line-height: 1.05;
+  font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.lab-kpi .v small { font-size: .45em; color: var(--muted); margin-left: .2rem; }
+
+/* ---------- two-column body ---------- */
+.lab-body {
+  display: grid; grid-template-columns: 11.5rem minmax(0, 1fr);
+  gap: 3rem; padding-top: 2.4rem;
+}
+.lab-toc { position: sticky; top: 1.2rem; align-self: start; }
+.lab-toc .h {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: .7rem;
+}
+.lab-toc ol { list-style: none; padding: 0; margin: 0; border-left: var(--hair); }
+.lab-toc li { margin: 0; }
+.lab-toc a {
+  display: block; padding: .34rem 0 .34rem .8rem; margin-left: -1px;
+  border-left: 2px solid transparent; font-size: .82rem; color: var(--muted);
+  text-decoration: none; transition: color .15s, border-color .15s;
+}
+.lab-toc a:hover, .lab-toc a:focus-visible { color: var(--ink); border-left-color: var(--accent); }
+.lab-toc .n { font-family: var(--mono); font-size: .66rem; color: var(--faint); margin-right: .45rem; }
+
+/* ---------- sections ---------- */
+.lab-sec { padding: 0 0 2.6rem; scroll-margin-top: 1rem; }
+.lab-sec + .lab-sec { border-top: var(--hair); padding-top: 2.2rem; }
+.lab-sec h2 {
+  font-family: var(--display); font-weight: 500; font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  letter-spacing: -0.01em; margin: 0 0 .35rem;
+}
+.lab-sec .sub {
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .05em;
+  color: var(--muted); margin: 0 0 1.2rem;
+}
+.lab-sec p { color: var(--ink-soft); }
+
+/* ---------- data tables ---------- */
+.lab-table-wrap { overflow-x: auto; border: var(--hair); background: var(--panel); }
+.lab table.data {
+  width: 100%; margin: 0; border-collapse: collapse; font-size: .86rem;
+  font-variant-numeric: tabular-nums;
+}
+.lab table.data th, .lab table.data td {
+  padding: .52rem .6rem; border: 0; border-bottom: var(--hair);
+  text-align: right; white-space: nowrap;
+}
+.lab table.data thead th {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); font-weight: 500;
+  border-bottom: var(--hair-strong); background: transparent;
+}
+.lab table.data tbody th, .lab table.data thead th:first-child {
+  text-align: left; font-weight: 500; color: var(--ink);
+}
+.lab table.data tbody tr:last-child th, .lab table.data tbody tr:last-child td { border-bottom: 0; }
+.lab table.data tbody tr:hover td { background: var(--bg-soft); }
+.lab table.data td.hot { font-weight: 600; color: var(--ink); }
+.lab table.data td.cool { color: var(--muted); }
+
+/* heat tint: set style="--v:.95" on the cell */
+.lab td.heat {
+  background: color-mix(in srgb, var(--accent) calc(var(--v, 0) * 26%), transparent);
+  color: var(--ink);
+}
+.lab td.heat-neg {
+  background: color-mix(in srgb, var(--c2) calc(var(--v, 0) * 26%), transparent);
+  color: var(--ink);
+}
+
+/* ---------- figures ---------- */
+.lab-fig { margin: 1.1rem 0 0; border: var(--hair); background: var(--panel); }
+.lab-fig img { display: block; width: 100%; height: auto; }
+.lab-fig figcaption {
+  display: flex; flex-wrap: wrap; gap: .4rem 1rem; justify-content: space-between;
+  padding: .6rem .75rem; border-top: var(--hair);
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .04em; color: var(--muted);
+}
+.lab-fig figcaption b { font-weight: 600; color: var(--ink-soft); }
+.lab-fig.wide img { background: #fff; }
+
+/* ---------- notes / lists ---------- */
+.lab-note {
+  border-left: 2px solid var(--accent); padding: .15rem 0 .15rem 1rem;
+  color: var(--ink-soft); font-size: .92rem; margin: 1rem 0;
+}
+.lab-list { counter-reset: item; list-style: none; padding: 0; margin: 1rem 0 0; }
+.lab-list li {
+  position: relative; padding: .75rem 0 .75rem 2.6rem; border-top: var(--hair);
+  color: var(--ink-soft); font-size: .92rem; line-height: 1.65;
+}
+.lab-list li::before {
+  counter-increment: item; content: counter(item, decimal-leading-zero);
+  position: absolute; left: 0; top: .78rem;
+  font-family: var(--mono); font-size: .68rem; color: var(--accent); letter-spacing: .06em;
+}
+.lab-list li b { color: var(--ink); }
+
+.lab pre {
+  background: var(--bg-soft); border: var(--hair); border-radius: 3px;
+  padding: .9rem 1rem; font-size: .78rem; line-height: 1.65; overflow-x: auto;
+}
+.lab code { font-size: .86em; }
+
+/* ---------- footer ---------- */
+.lab-foot {
+  border-top: var(--hair-strong); margin-top: .5rem; padding: 1rem 0 2.4rem;
+  font-family: var(--mono); font-size: .68rem; color: var(--muted);
+  display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; justify-content: space-between;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .lab-body { grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+  .lab-toc { position: static; }
+  .lab-toc ol { display: flex; flex-wrap: wrap; border-left: 0; gap: .3rem 0; }
+  .lab-toc a { border-left: 0; padding: .3rem .6rem; }
+  .lab-kpis { grid-template-columns: repeat(2, 1fr); }
+  .lab-kpi:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-toc a { transition: none; }
+}

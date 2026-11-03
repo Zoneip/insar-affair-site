@@ -22,7 +22,7 @@
 <header class="page-head">
   <p class="eyebrow">Visual · Two tracks</p>
   <h1>可视化</h1>
-  <p class="sub">两条线并行推进：一块是 InSAR 块边界分割矩阵，一块是论文复现（含逐像素分割产物）。</p>
+  <p class="sub">三条线并行：InSAR 块边界分割矩阵、论文复现（含逐像素分割产物）、以及物理生成数据集训练的全尺寸边界模型。</p>
   <p class="meta">segmentation / reproduction</p>
 </header>
 <div class="viz-hub">
@@ -38,6 +38,13 @@
     <h2>论文复现</h2>
     <p>F1–视数曲线、训练过程、吞吐对照、逐节复现状态，以及 DANI-NET 逐像素分割的复现产物。</p>
     <span class="viz-hub-note">8 组实验 · 最高 F1 0.824</span>
+    <span class="arrow">进入 →</span>
+  </a>
+  <a class="viz-hub-card" href="blockgen/index.html">
+    <span class="viz-tag">TRACK 03</span>
+    <h2>生成式数据集 · 全尺寸模型</h2>
+    <p>物理正演的相干矩阵在线生成，训练一个尺寸无关的检测器：10×10 到 256×256 全部可用，并与无学习基线对照。</p>
+    <span class="viz-hub-note">fast_v1 · 60 epoch · mean Exact 0.946</span>
     <span class="arrow">进入 →</span>
   </a>
 </div>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生成式数据集 · 全尺寸边界模型 · InSAR_affair</title>
+<meta name="description" content="物理生成数据集训练的全卷积边界模型：10×10 到 256×256 全尺寸可用。">
+<meta name="theme-color" content="#faf8f3">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/vendor/pico/pico.min.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="stylesheet" href="../../assets/css/lab.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-nav">
+  <nav class="container">
+    <ul><li><a class="brand" href="../../index.html">INSAR / AFFAIR</a></li></ul>
+    <ul><li><a href="../../index.html">总览</a></li><li><a href="../../live/index.html">训练看板</a></li><li><a href="../../analysis/index.html">数据分析</a></li><li><a href="../../visual/index.html" aria-current="page">可视化</a></li><li><a href="../../gaps/index.html">缺陷分析</a></li><li><a href="../../documents/index.html">文档</a></li></ul>
+  </nav>
+</header>
+
+<main class="container lab" id="main">
+
+  <header class="lab-hero">
+    <p class="eyebrow">Track 03 · Synthetic to Scale</p>
+    <h1>生成式数据集<br>与全尺寸边界模型</h1>
+    <p class="lede">相干矩阵不落盘，按 <code>(seed, epoch, index, size)</code> 在线批量正演生成；
+     一个 1.20 M 参数的全卷积检测器在 <strong>N = 10 … 256</strong> 的整个区间工作，
+     并与无学习基线在同一批测试矩阵上对照。</p>
+    <div class="runline">
+      <span>fast_v1</span><span>60 epoch</span><span>52.3 min</span><span>Ascend 910 · npu:0</span><span>mean Exact 0.946</span>
+    </div>
+  </header>
+
+  <section class="lab-kpis" aria-label="关键指标">
+    <div class="lab-kpi"><span class="k">Matrix sizes</span><span class="v">10 – 256</span></div>
+    <div class="lab-kpi"><span class="k">Mean exact</span><span class="v">0.946</span></div>
+    <div class="lab-kpi"><span class="k">Spread</span><span class="v">0.925 – 0.953</span></div>
+    <div class="lab-kpi"><span class="k">Train time</span><span class="v">52.3<small>min</small></span></div>
+  </section>
+
+  <div class="lab-body">
+    <aside class="lab-toc" aria-label="页内目录">
+      <p class="h">Contents</p>
+      <ol>
+        <li><a href="#s1"><span class="n">01</span>逐尺寸结果</a></li>
+        <li><a href="#s2"><span class="n">02</span>基线对照</a></li>
+        <li><a href="#s3"><span class="n">03</span>鲁棒性</a></li>
+        <li><a href="#s4"><span class="n">04</span>样例</a></li>
+        <li><a href="#s5"><span class="n">05</span>训练过程</a></li>
+        <li><a href="#s6"><span class="n">06</span>调试记录</a></li>
+        <li><a href="#s7"><span class="n">07</span>复现</a></li>
+      </ol>
+    </aside>
+
+    <div>
+
+      <section class="lab-sec" id="s1">
+        <h2>逐尺寸结果</h2>
+        <p class="sub">测试集每尺寸 600 个新矩阵 · 阈值在独立验证集（400）上按尺寸校准</p>
+        <div class="lab-table-wrap">
+          <table class="data">
+            <thead><tr><th>N</th><th>10</th><th>16</th><th>24</th><th>32</th><th>48</th><th>64</th><th>96</th><th>128</th><th>192</th><th>256</th></tr></thead>
+            <tbody>
+              <tr><th>Exact</th>
+                <td class="heat" style="--v:.953">0.953</td><td class="heat" style="--v:.925">0.925</td>
+                <td class="heat" style="--v:.942">0.942</td><td class="heat" style="--v:.950">0.950</td>
+                <td class="heat" style="--v:.942">0.942</td><td class="heat" style="--v:.953">0.953</td>
+                <td class="heat" style="--v:.948">0.948</td><td class="heat" style="--v:.952">0.952</td>
+                <td class="heat" style="--v:.942">0.942</td><td class="heat hot" style="--v:.948">0.948</td></tr>
+              <tr><th>Rect F1</th><td>0.985</td><td>0.981</td><td>0.988</td><td>0.991</td><td>0.990</td><td>0.993</td><td>0.993</td><td>0.994</td><td>0.994</td><td>0.993</td></tr>
+              <tr><th>Boundary F1</th><td>0.952</td><td>0.954</td><td>0.977</td><td>0.985</td><td>0.987</td><td>0.991</td><td>0.989</td><td>0.990</td><td>0.987</td><td>0.985</td></tr>
+              <tr><th>计数 MAE</th><td>0.05</td><td>0.08</td><td>0.06</td><td>0.05</td><td>0.06</td><td>0.04</td><td>0.06</td><td>0.05</td><td>0.07</td><td>0.06</td></tr>
+              <tr><th>校准阈值</th><td class="cool">0.30</td><td class="cool">0.35</td><td class="cool">0.30</td><td class="cool">0.30</td><td class="cool">0.60</td><td class="cool">0.45</td><td class="cool">0.55</td><td class="cool">0.60</td><td class="cool">0.60</td><td class="cool">0.55</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lab-note">均值 <b>0.9455</b>、极差仅 <b>0.028</b>：10 到 256 之间没有尺寸断崖。</p>
+        <figure class="lab-fig wide">
+          <img src="../../assets/img/blockgen/curve_by_size.png" alt="Exact / Rect F1 / Boundary F1 随尺寸变化" loading="lazy">
+          <figcaption><b>图 1</b> 指标随矩阵尺寸<small>Exact · Rect F1 · Boundary F1</small></figcaption>
+        </figure>
+      </section>
+
+      <section class="lab-sec" id="s2">
+        <h2>与无学习基线对照</h2>
+        <p class="sub">同一条近对角带统计量 + 阈值，不含任何训练</p>
+        <figure class="lab-fig wide">
+          <img src="../../assets/img/blockgen/model_vs_baseline.png" alt="训练模型与 band 基线对照" loading="lazy">
+          <figcaption><b>图 2</b> 蓝：训练后模型；橙：band 检测器<small>增益 +0.065（N=10）→ +0.277（N=64）</small></figcaption>
+        </figure>
+      </section>
+
+      <section class="lab-sec" id="s3">
+        <h2>鲁棒性</h2>
+        <p class="sub">同一权重 · 四种噪声配方 · 六档尺寸</p>
+        <div class="lab-table-wrap">
+          <table class="data">
+            <thead><tr><th>配方</th><th>10</th><th>24</th><th>64</th><th>96</th><th>192</th><th>256</th></tr></thead>
+            <tbody>
+              <tr><th>clean111</th><td class="heat" style="--v:.95">0.95</td><td class="heat" style="--v:.95">0.95</td><td class="heat" style="--v:.94">0.94</td><td class="heat" style="--v:.88">0.88</td><td class="heat" style="--v:.88">0.88</td><td class="heat" style="--v:.90">0.90</td></tr>
+              <tr><th>pairwise</th><td class="heat" style="--v:.95">0.95</td><td class="heat" style="--v:.96">0.96</td><td class="heat" style="--v:.93">0.93</td><td class="heat" style="--v:.97">0.97</td><td class="heat" style="--v:.88">0.88</td><td class="heat" style="--v:.90">0.90</td></tr>
+              <tr><th>mild</th><td class="heat" style="--v:.96">0.96</td><td class="heat" style="--v:.93">0.93</td><td class="heat" style="--v:.93">0.93</td><td class="heat" style="--v:.89">0.89</td><td class="heat" style="--v:.88">0.88</td><td class="heat" style="--v:.81">0.81</td></tr>
+              <tr><th>hard <span class="cool">域外</span></th><td class="heat-neg" style="--v:.49">0.51</td><td class="heat-neg" style="--v:.66">0.34</td><td class="heat-neg" style="--v:.89">0.11</td><td class="heat-neg" style="--v:.97">0.03</td><td class="heat-neg" style="--v:1">0.00</td><td class="heat-neg" style="--v:1">0.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lab-note">真实域（clean / pairwise / mild）稳定在 <b>0.81–0.97</b>。
+          <b>hard</b> 用的 0.5 px 配准是真实 TOPS 精度（0.001–0.01 px）的 50 倍，崩掉属预期，不作部署指标。</p>
+
+        <p class="sub" style="margin-top:1.4rem">视数敏感性 · 固定 L，其余同训练分布</p>
+        <div class="lab-table-wrap">
+          <table class="data">
+            <thead><tr><th>N</th><th>L = 9</th><th>L = 16</th><th>L = 24</th><th>L = 48</th></tr></thead>
+            <tbody>
+              <tr><th>10</th><td class="heat-neg" style="--v:.17">0.830</td><td class="heat" style="--v:.94">0.940</td><td class="heat" style="--v:1">1.000</td><td class="heat" style="--v:.99">0.990</td></tr>
+              <tr><th>64</th><td class="heat-neg" style="--v:.32">0.680</td><td class="heat" style="--v:.93">0.930</td><td class="heat" style="--v:1">1.000</td><td class="heat" style="--v:.97">0.970</td></tr>
+              <tr><th>256</th><td class="heat-neg" style="--v:.74">0.260</td><td class="heat" style="--v:.92">0.920</td><td class="heat" style="--v:.99">0.990</td><td class="heat" style="--v:1">1.000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lab-note"><b>L = 9 是真难点</b>，且随 N 放大而恶化——候选变多，Exact 要求全对。</p>
+
+        <figure class="lab-fig wide">
+          <img src="../../assets/img/blockgen/robust_heatmap.png" alt="size × noise profile 热图" loading="lazy">
+          <figcaption><b>图 3</b> 尺寸 × 噪声配方<small>同一权重，阈值沿用各尺寸校准值</small></figcaption>
+        </figure>
+      </section>
+
+      <section class="lab-sec" id="s4">
+        <h2>样例</h2>
+        <p class="sub">白线 = 真值边界 · 红虚线 = 预测</p>
+        <figure class="lab-fig wide">
+          <img src="../../assets/img/blockgen/gallery_N10.png" alt="N=10 的 12 个测试样本" loading="lazy">
+          <figcaption><b>图 4</b> N = 10<small>12 个随机测试样本，边界全部命中</small></figcaption>
+        </figure>
+        <figure class="lab-fig wide">
+          <img src="../../assets/img/blockgen/gallery_N256.png" alt="N=256 的样例" loading="lazy">
+          <figcaption><b>图 5</b> N = 256<small>块结构只在近对角带可见，与 τ ≈ 9.6 个重访周期的物理预期一致</small></figcaption>
+        </figure>
+      </section>
+
+      <section class="lab-sec" id="s5">
+        <h2>训练过程</h2>
+        <p class="sub">60 epoch · 每 epoch 按尺寸分配步数，使各尺寸墙钟时间相近</p>
+        <figure class="lab-fig wide">
+          <img src="../../assets/img/blockgen/curves_loss_exact.png" alt="loss 与 mean Exact 曲线" loading="lazy">
+          <figcaption><b>图 6</b> loss / mean Exact<small>前 20% epoch 只训较小尺寸，之后全尺寸混训</small></figcaption>
+        </figure>
+        <figure class="lab-fig wide">
+          <img src="../../assets/img/blockgen/curves_per_size.png" alt="逐尺寸曲线" loading="lazy">
+          <figcaption><b>图 7</b> 逐尺寸 Exact<small>大尺寸在 warm-up 结束后提升最明显</small></figcaption>
+        </figure>
+      </section>
+
+      <section class="lab-sec" id="s6">
+        <h2>调试记录</h2>
+        <p class="sub">本轮真正改变结果的四条</p>
+        <ol class="lab-list">
+          <li><b>阈值校准是决定性的。</b>同一权重，N = 10 在 0.5 阈值下 0.782，校准到 0.30 后 0.955——此前"小尺寸弱"是假象。</li>
+          <li><b>小矩阵生成必须 <code>OMP_NUM_THREADS=1</code></b>，否则 640 线程互抢，生成速度掉一个量级。</li>
+          <li><b>DataLoader 多 worker 在 NPU 上下文 fork 后会挂死</b>；改为单进程在线批量生成即稳定。</li>
+          <li><b>批量 Cholesky + complex64</b> 把 N=128 的生成从 40.7 ms/样本降到 14.5 ms/样本。</li>
+        </ol>
+      </section>
+
+      <section class="lab-sec" id="s7">
+        <h2>复现</h2>
+        <p class="sub">A3 · Ascend 910 · 单卡</p>
+<pre><code>export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
+cd /root/insar_affair/blockcoh
+
+python src/train_fast.py --epochs 60 --device npu --out runs/fast_v1
+python src/eval_fast.py   --ckpt runs/fast_v1/best.pt --out figs/final
+python src/robust_eval.py --ckpt runs/fast_v1/best.pt --eval-json figs/final/eval.json</code></pre>
+        <p>权重与代码在仓库 <code>workspace/block_coherence/</code>；完整说明见
+          <a href="../../documents/read/blockgen.html">文档页</a>。</p>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="lab-foot">
+    <span>INSAR / AFFAIR · TRACK 03</span>
+    <span>weights · workspace/block_coherence/runs/fast_v1/best.pt</span>
+    <span>data · synthetic, on-the-fly</span>
+  </footer>
+
+</main>
+</body>
+</html>
